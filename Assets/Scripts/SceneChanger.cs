@@ -1,16 +1,27 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneChanger : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // 按下PLAY時會執行一次（初始化）
     void Start()
+    {
+
+    }
+
+    // 畫面每一幀執行一次（持續更新）
+    void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void LoadScene(string sceneName)
     {
-        
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
