@@ -3,6 +3,7 @@
 [RequireComponent(typeof(CanvasGroup))]
 public class UIPanelCtrl : MonoBehaviour
 {
+    #region 基本元件
     /// <summary>
     /// CanvasGroup元件本體(盡量不直接控制)
     /// </summary>
@@ -10,14 +11,8 @@ public class UIPanelCtrl : MonoBehaviour
     /// <summary>
     /// [延遲載入]CanvasGroup元件
     /// </summary>
-    private CanvasGroup canvasGroup // => _canvasGroup ??= GetComponent<CanvasGroup>();
-    {
-        get
-        {
-            if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
-            return _canvasGroup;
-        }
-    }
+    private CanvasGroup canvasGroup  => _canvasGroup ??= GetComponent<CanvasGroup>();
+    #endregion 基本元件
 
     [Tooltip("UI面板預設是否開啓")]
     public bool openOnAwake;
@@ -33,14 +28,20 @@ public class UIPanelCtrl : MonoBehaviour
     /// <param name="B">true 開 / false 関</param>
     public void Switch(bool B)
     {
-        if (B)
-        {
-            canvasGroup.alpha = 1;
-        }
-        else
-        {
-            canvasGroup.alpha = 0;
-        }
+        canvasGroup.alpha = B ? 1 : 0;
         canvasGroup.blocksRaycasts = B;
     }
+
+    #region ContextMenu測試功能
+    [ContextMenu("面板打開")]
+    public void PanelOn()
+    {
+        Switch(true);
+    }
+    [ContextMenu("面板關閉")]
+    public void PanelOff()
+    {
+        Switch(false);
+    }
+    #endregion ContextMenu測試功能
 }
