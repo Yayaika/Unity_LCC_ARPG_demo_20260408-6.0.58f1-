@@ -1,16 +1,44 @@
-using UnityEngine;
+﻿using UnityEngine;
+using Unity.Cinemachine;
 
 public class UIPlayerSelectCtrl : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    /// <summary>
+    /// 索引原始值
+    /// </summary>
+    private int _index;
+    private int index
     {
-        
+        get
+        {
+            return _index;
+        }
+        set
+        {// 小於0特殊處理成尾號，否則取餘數
+            _index = value < 0 ? vCams.Length - 1 : value % vCams.Length;
+        }
     }
+    /// <summary>
+    /// 虛擬鏡頭設定集合物
+    /// </summary>
+    public CinemachineCamera[] vCams;
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// 下一個角色(鏡頭逆轉)
+    /// </summary>
+    public void NextPlayer()
     {
-        
+        vCams[index].Priority.Enabled = false;
+        index++;// 索引增加
+        vCams[index].Priority.Enabled = true;
+    }
+    /// <summary>
+    /// 上一個角色(鏡頭順轉)
+    /// </summary>
+    public void PrePlayer()
+    {
+        vCams[index].Priority.Enabled = false;
+        index--;// 索引減少
+        vCams[index].Priority.Enabled = true;
     }
 }
