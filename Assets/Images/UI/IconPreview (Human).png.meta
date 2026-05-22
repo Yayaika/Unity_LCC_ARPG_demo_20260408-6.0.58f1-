@@ -1,12 +1,5 @@
 fileFormatVersion: 2
-guid: 0d93729480a96a845b150e4044064768
-AssetOrigin:
-  serializedVersion: 1
-  productId: 310092
-  packageName: Humans army - Guard
-  packageVersion: 1.0
-  assetPath: Assets/SimpleAssets/Common/Sprites/Icons/IconPreview (Demon).png
-  uploadId: 732011
+guid: 930c60c107d5c9c41a82dcd33c4a6078
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
