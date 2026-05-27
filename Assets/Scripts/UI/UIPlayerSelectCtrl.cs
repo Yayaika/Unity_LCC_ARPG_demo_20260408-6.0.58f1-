@@ -90,12 +90,25 @@ public class UIPlayerSelectCtrl : MonoBehaviour
         UpdateInfo();
     }
 
+    /// <summary>
+    /// 更新選角UI資訊
+    /// </summary>
     private void UpdateInfo()
     {
         // 選中預設第一位角色
         charOptions[index].Switch(true);
         _textName.text = charOptions[index].GetName();
         _textDesc.text = charOptions[index].GetDesc();
+        
+    }
+
+    /// <summary>
+    /// 進入游戲關卡(舞臺)
+    /// </summary>
+    public void EnterStage()
+    {
+        GameManager.playerIndex = index;
+        GameManager.LoadScene("Gaming");
     }
 
     /// <summary>

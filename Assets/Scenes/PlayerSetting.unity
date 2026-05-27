@@ -305,7 +305,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'DecsDecs
 
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------.'
+    ----------------------------------------------------------------------------------------------------------------------------------------.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: faa0d41a12f8e204d8f16a3159f4a50a, type: 2}
   m_sharedMaterial: {fileID: 3431510305854848932, guid: faa0d41a12f8e204d8f16a3159f4a50a, type: 2}
@@ -1856,10 +1856,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: "\u9078\u4E2D\u9032\u5165\u6E38\u6232"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 57067a4b71ecbc846aa35abcfaea6382, type: 2}
+  m_sharedMaterial: {fileID: 5156977262402597148, guid: 57067a4b71ecbc846aa35abcfaea6382, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1883,8 +1883,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9810,7 +9810,7 @@ GameObject:
   - component: {fileID: 1868802549}
   - component: {fileID: 1868802548}
   m_Layer: 5
-  m_Name: Button
+  m_Name: '[BTN]EnterStage'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9879,7 +9879,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1868802549}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 398145139}
+        m_TargetAssemblyTypeName: UIPlayerSelectCtrl, Assembly-CSharp
+        m_MethodName: EnterStage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1868802549
 MonoBehaviour:
   m_ObjectHideFlags: 0
