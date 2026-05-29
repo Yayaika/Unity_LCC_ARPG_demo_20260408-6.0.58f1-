@@ -28,6 +28,8 @@ public class UIPlayerSelectCtrl : MonoBehaviour
         }
     }
     [SerializeField]
+    private PlayerDB _playerDB;
+    [SerializeField]
     private TextMeshProUGUI _textName;
     [SerializeField]
     private TextMeshProUGUI _textDesc;
@@ -39,10 +41,6 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     public struct CharOption
     {
         /// <summary>
-        /// 角色名稱
-        /// </summary>
-        public string name;
-        /// <summary>
         /// 虛擬鏡頭設定
         /// </summary>
         public CinemachineCamera vCam;
@@ -50,11 +48,6 @@ public class UIPlayerSelectCtrl : MonoBehaviour
         /// UI狀態提示(是否選中)
         /// </summary>
         public Toggle toggle;
-        /// <summary>
-        /// 文字説明()
-        /// </summary>
-        [TextArea]
-        public string desc; // description
         /// <summary>
         /// 角色選項開關切換
         /// </summary>
@@ -65,17 +58,16 @@ public class UIPlayerSelectCtrl : MonoBehaviour
             toggle.isOn = B;
         }
 
-        public string GetName()
+        /// <summary>
+        /// 設定Toggle圖案
+        /// </summary>
+        /// <param name="icon">圖案</param>
+        public void SetToggle(Sprite icon)
         {
-            return name;
-        }
-
-        public string GetDesc()
-        {
-            return desc;
+            (toggle.targetGraphic as Image).sprite = icon;
+            (toggle.graphic as Image).sprite = icon;
         }
     }
-
  
     /// <summary>
     /// [陣列] 虛擬鏡頭設定集合物
@@ -87,6 +79,11 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        for(int i = 0; i < charOptions.Length; i++)
+        {// 起始(0)；終點(3)；迭代(1)
+            charOptions[i].SetToggle(_playerDB.GetPlayerData(i).icon);
+        }
+        // 選中預設第一位角色
         UpdateInfo();
     }
 
@@ -97,9 +94,8 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     {
         // 選中預設第一位角色
         charOptions[index].Switch(true);
-        _textName.text = charOptions[index].GetName();
-        _textDesc.text = charOptions[index].GetDesc();
-        
+        _textName.text = _playerDB.GetPlayerData(index).name;
+        _textDesc.text = _playerDB.GetPlayerData(index).desc;
     }
 
     /// <summary>
