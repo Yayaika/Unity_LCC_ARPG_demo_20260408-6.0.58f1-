@@ -20,6 +20,10 @@ public struct PlayerData
     /// 代表性圖標
     /// </summary>
     public Sprite icon;
+    /// <summary>
+    /// 玩家控制模組
+    /// </summary>
+    public PlayerCtrl playerCtrl;
 }
 
 /// <summary>
@@ -33,7 +37,7 @@ public class PlayerDB : ScriptableObject
     /// <summary>
     /// 使用索引值回傳角色資料
     /// </summary>
-    /// <param name="index"></param>
+    /// <param name="index">索引值</param>
     /// <returns>角色資料</returns>
     public PlayerData GetPlayerData(int index)
     {

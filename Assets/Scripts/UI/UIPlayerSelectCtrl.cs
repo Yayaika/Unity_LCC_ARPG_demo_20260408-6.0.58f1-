@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static UIPlayerSelectCtrl;
+using static UnityEditor.FilePathAttribute;
 
 
 public class UIPlayerSelectCtrl : MonoBehaviour
@@ -49,6 +50,11 @@ public class UIPlayerSelectCtrl : MonoBehaviour
         /// </summary>
         public Toggle toggle;
         /// <summary>
+        /// 定位(焦點)
+        /// </summary>
+        public Transform location;
+
+        /// <summary>
         /// 角色選項開關切換
         /// </summary>
         /// <param name="B">開/關</param>
@@ -81,7 +87,10 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     {
         for(int i = 0; i < charOptions.Length; i++)
         {// 起始(0)；終點(3)；迭代(1)
+            PlayerData data = _playerDB.GetPlayerData(i);
             charOptions[i].SetToggle(_playerDB.GetPlayerData(i).icon);
+            //具象化物件(預製物，坐標，旋轉)
+            Instantiate(data.playerCtrl, charOptions[i].location.position, charOptions[i].location.rotation);
         }
         // 選中預設第一位角色
         UpdateInfo();

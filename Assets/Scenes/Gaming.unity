@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 147719874}
   - component: {fileID: 147719876}
   - component: {fileID: 147719875}
+  - component: {fileID: 147719877}
   m_Layer: 5
   m_Name: PlayerInfornationPanel
   m_TagString: Untagged
@@ -196,6 +197,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 147719873}
   m_CullTransparentMesh: 1
+--- !u!114 &147719877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147719873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf6212e4bda33649a43d2d81f55dc25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerDB: {fileID: 11400000, guid: b88c2ec2b1ddb8f40a4dd116d3c978e8, type: 2}
+  _headImg: {fileID: 2057087533}
+  _nameText: {fileID: 1486214578}
 --- !u!1 &625018272
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,8 +665,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Player Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 57067a4b71ecbc846aa35abcfaea6382, type: 2}
+  m_sharedMaterial: {fileID: 5156977262402597148, guid: 57067a4b71ecbc846aa35abcfaea6382, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
