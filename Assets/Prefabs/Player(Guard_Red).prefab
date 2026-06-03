@@ -71,6 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f17ab26a02961e4a8833d6272930ced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSpeed: 3
 --- !u!1001 &8677412033929246544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123,6 +124,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Guard_Rig_Red
       objectReference: {fileID: 0}
+    - target: {fileID: 6019086828905204960, guid: 5bb12838bd1a03a458bbbb7b79f50bb6, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 3f400d8763201e0469e4fdc64827a24c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
