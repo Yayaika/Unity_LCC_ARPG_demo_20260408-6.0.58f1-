@@ -12,6 +12,14 @@ public class PlayerCtrl : MonoBehaviour
     /// [延遲載入]CharacterController元件
     /// </summary>
     private CharacterController charCtrl => _charCtrl ??= GetComponent<CharacterController>();
+    /// <summary>
+    /// AnimaCtrl元件本體
+    /// </summary>
+    private AnimaCtrl _animaCtrl;
+    /// <summary>
+    /// [延遲載入]AnimaCtrl元件
+    /// </summary>
+    private AnimaCtrl animaCtrl => _animaCtrl ??= GetComponentInChildren<AnimaCtrl>();
     #endregion 基础元件
 
     #region 基礎参数
@@ -44,6 +52,8 @@ public class PlayerCtrl : MonoBehaviour
     /// 依據方向向量判斷是否正在移動
     /// </summary>
     public bool IsMoving => MoveInput != Vector2.zero;
+    public float MoveMulit => MoveInput.magnitude;
+    public float MoveSpeed => MoveInput.magnitude * _moveSpeed;
     #endregion 公用参数
 
     #region 生命周期
@@ -66,7 +76,16 @@ public class PlayerCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        AnimaUpdate();
         Move();
+    }
+
+    void AnimaUpdate()
+    {
+        animaCtrl.SetBool("IsMoving", IsMoving);
+        
+        animaCtrl.SetFloat("MoveMulit", MoveMulit);
+
     }
     #endregion 生命周期
 
@@ -76,7 +95,7 @@ public class PlayerCtrl : MonoBehaviour
         //轉向
         charCtrl.transform.rotation = Quaternion.LookRotation(FacingVector);
         //前進
-        charCtrl.Move(transform.forward * _moveSpeed * Time.deltaTime);
+        charCtrl.Move(transform.forward * MoveSpeed * Time.deltaTime);
     }
 
     void Jump()

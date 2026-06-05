@@ -113,7 +113,7 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     public void EnterStage()
     {
         GameManager.playerIndex = index;
-        GameManager.LoadScene("Gaming");
+        GameManager.LoadScene("GamingUI");
     }
 
     /// <summary>
