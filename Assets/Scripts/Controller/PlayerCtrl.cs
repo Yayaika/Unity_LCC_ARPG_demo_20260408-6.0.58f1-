@@ -29,6 +29,10 @@ public class PlayerCtrl : MonoBehaviour
     private float _moveSpeed = 3f;
     [SerializeField]
     private float _jumpHeight = 3f;
+    private float _jumpPower = 1f;
+    [SerializeField]
+    private int _airJumpCountMax = 1;
+    private float _airJumpCount;
     private Vector3 _velocity;
     #endregion 基礎参数
 
@@ -58,11 +62,30 @@ public class PlayerCtrl : MonoBehaviour
     /// 依據方向向量判斷是否正在移動
     /// </summary>
     public bool IsMoving => MoveInput != Vector2.zero;
+    /// <summary>
+    /// 移動倍率(標準化 0~1)
+    /// </summary>
     public float MoveMulit => MoveInput.magnitude;
+    /// <summary>
+    /// 當前移動可達速度
+    /// </summary>
     public float MoveSpeed => MoveInput.magnitude * _moveSpeed;
     public float G => Mathf.Abs(Physics.gravity.y);
-    public float H => _jumpHeight;
-
+    /// <summary>
+    /// 當前跳躍可達高度
+    /// </summary>
+    public float H => _jumpHeight * _jumpPower;
+    /// <summary>
+    /// 是否處於觸地狀態
+    /// </summary>
+    public bool IsGrounded => charCtrl.isGrounded && _velocity.y < 0;
+    /// <summary>
+    /// 是否可以執行空中跳躍
+    /// </summary>
+    public bool CanAirJump => _airJumpCount > 0;
+    /// <summary>
+    /// 用於位移的動能
+    /// </summary>
     public Vector3 Velocity => _velocity * Time.deltaTime;
     #endregion 公用参数
 
@@ -117,10 +140,11 @@ public class PlayerCtrl : MonoBehaviour
         _velocity.z = transform.forward.z * MoveSpeed;
         _velocity.x = transform.forward.x * MoveSpeed;
         //重力
-        if (charCtrl.isGrounded && _velocity.y < 0)
+        if (IsGrounded)
         {
-            _velocity.y = -1;
-            
+            _velocity.y = -1f;
+            _airJumpCount = _airJumpCountMax;
+            _jumpPower = 1f;
         }
         else
         {
@@ -146,7 +170,17 @@ public class PlayerCtrl : MonoBehaviour
     /// <param name="context">接收輸入</param>
     void Jump(InputAction.CallbackContext context)
     {
-        //向上
-        _velocity.y = Mathf.Sqrt(2 * G * H);
+        if (IsGrounded) 
+        {
+            //向上
+            _velocity.y = Mathf.Sqrt(2 * G * H);
+           
+        }
+        else if (CanAirJump)
+        {
+            _airJumpCount--;
+            _jumpPower = 0.5f;
+            _velocity.y = Mathf.Sqrt(2 * G * H);
+        }
     }
 }
