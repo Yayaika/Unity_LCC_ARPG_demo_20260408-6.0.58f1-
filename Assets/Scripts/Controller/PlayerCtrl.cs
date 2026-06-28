@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCtrl : MonoBehaviour
@@ -34,6 +35,9 @@ public class PlayerCtrl : MonoBehaviour
     private int _airJumpCountMax = 1;
     private float _airJumpCount;
     private Vector3 _velocity;
+    public int _combo;
+    private bool _isAttacking;
+
     #endregion 基礎参数
 
     #region 公用参数
@@ -87,6 +91,20 @@ public class PlayerCtrl : MonoBehaviour
     /// 用於位移的動能
     /// </summary>
     public Vector3 Velocity => _velocity * Time.deltaTime;
+    public float VelocityY => _velocity.y;
+
+    public int Combo
+    {
+        get
+        {
+            return _combo;
+        }
+        set
+        {
+            _combo = value;
+            if(_combo > 2) _combo = 1;
+        }
+    }
     #endregion 公用参数
 
     #region 生命周期
@@ -95,20 +113,25 @@ public class PlayerCtrl : MonoBehaviour
         InputCtrl.Play.Enable();
         //操作行爲時間訂閲
         InputCtrl.Play.Jump.performed += Jump;
+        InputCtrl.Play.Attack.performed += Attack;
 
     }
+
+    
 
     private void OnDisable()
     {
         InputCtrl.Play.Disable();
 
         InputCtrl.Play.Jump.performed -= Jump;
+        InputCtrl.Play.Attack.performed -= Attack;
     }
 
     void Start()
     {
         
     }
+
 
     /// <summary>
     /// 狀態更新
@@ -126,8 +149,10 @@ public class PlayerCtrl : MonoBehaviour
     void AnimaUpdate()
     {
         animaCtrl.SetBool("IsMoving", IsMoving);
-        
+        animaCtrl.SetBool("IsGrounded", IsGrounded);
         animaCtrl.SetFloat("MoveMulit", MoveMulit);
+        animaCtrl.SetFloat("VelocityY", VelocityY);
+        animaCtrl.SetInteger("Combo", Combo);
 
     }
     #endregion 生命周期
@@ -163,7 +188,7 @@ public class PlayerCtrl : MonoBehaviour
         charCtrl.transform.rotation = Quaternion.LookRotation(FacingVector);
 
     }
-
+    #region 跳躍功能
     /// <summary>
     /// 跳躍事件
     /// </summary>
@@ -172,15 +197,44 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (IsGrounded) 
         {
-            //向上
-            _velocity.y = Mathf.Sqrt(2 * G * H);
-           
+            JumpHandle();
         }
         else if (CanAirJump)
         {
             _airJumpCount--;
             _jumpPower = 0.5f;
-            _velocity.y = Mathf.Sqrt(2 * G * H);
+            JumpHandle();
         }
     }
+
+    void JumpHandle()
+    {
+        //向上
+        _velocity.y = Mathf.Sqrt(2 * G * H);
+        animaCtrl.SetTrigger("JumpTrigger");
+    }
+    #endregion 跳躍功能
+
+
+    #region 攻擊功能
+    private void Attack(InputAction.CallbackContext context)
+    {
+        if (!_isAttacking) 
+        {//完全停止攻擊后：連續重啓
+            Combo = 1;
+            animaCtrl.SetTrigger("AttackTrigger");
+        }
+        
+    }
+
+    public void StartAttack()
+    {
+        _isAttacking = true;
+    }
+
+    public void EndAttack()
+    {
+        _isAttacking = false;
+    }
+    #endregion 攻擊功能
 }

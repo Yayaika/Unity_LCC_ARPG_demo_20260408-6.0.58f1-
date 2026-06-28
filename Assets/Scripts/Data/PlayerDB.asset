@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: PlayerDB
   m_EditorClassIdentifier: 
   datas:
+  - name: "\u7DA0\u8272\u9A0E\u58EB"
+    desc: "\u4E00\u540D\u7DA0\u8272\u76D4\u7532\u7684\u9A0E\u58EB\n\u559C\u597D\u81EA\u7136"
+    icon: {fileID: 21300000, guid: 441984207ebb5ac4fa819dcd76e64d09, type: 3}
+    playerCtrl: {fileID: 8608555863978343141, guid: 4d878df18bdc0a04fa4cd40db1d4a94e, type: 3}
   - name: "\u7D05\u8272\u9A0E\u58EB"
     desc: "\u4E00\u540D\u7D05\u8272\u76D4\u7532\u7684\u9A0E\u58EB\n\u6230\u9B25\u72C2\u71B1"
     icon: {fileID: 21300000, guid: 0d93729480a96a845b150e4044064768, type: 3}
     playerCtrl: {fileID: 1817492861721397926, guid: 75bdced22be1b394a819b1b0f68bc6b4, type: 3}
-  - name: "\u7DA0\u8272\u9A0E\u58EB"
-    desc: "\u4E00\u540D\u7DA0\u8272\u76D4\u7532\u7684\u9A0E\u58EB\n\u559C\u597D\u81EA\u7136"
-    icon: {fileID: 21300000, guid: 441984207ebb5ac4fa819dcd76e64d09, type: 3}
-    playerCtrl: {fileID: 8608555863978343141, guid: 7a50c3ee885ff31428871a6ab4bc4483, type: 3}
   - name: "\u9EC3\u8272\u9A0E\u58EB"
     desc: "\u4E00\u540D\u9EC3\u8272\u76D4\u7532\u7684\u9A0E\u58EB\n\u8EAB\u4EFD\u9AD8\u8CB4"
     icon: {fileID: 21300000, guid: ffc3492dc026d3a49af89792c15b6389, type: 3}
