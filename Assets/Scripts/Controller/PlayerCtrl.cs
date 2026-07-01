@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,21 +23,76 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     private AnimaCtrl animaCtrl => _animaCtrl ??= GetComponentInChildren<AnimaCtrl>();
     #endregion 基础元件
+    #region 狀態機
+    /// <summary>
+    /// 狀態機定義
+    /// </summary>
+    public enum State { Idle, Move, Jump, Dash, Attack }
+    /// <summary>
+    /// 角色當前狀態
+    /// </summary>
+    public State state = State.Idle;
+    /// <summary>
+    /// 切換狀態
+    /// </summary>
+    /// <param name="state">新狀態</param>
+    private void ChangeState(State state)
+    {
+        if (this.state == state) return;
+        this.state = state;
+    }
+
+    private void StateLogic() 
+    {
+        switch (state)
+        {
+            case State.Idle:
+                if (IsMoving) ChangeState(State.Move);
+                if (!IsGrounded) ChangeState(State.Jump); // 下墜(無起跳過程)
+                break;
+            case State.Move:
+                if (!IsMoving) ChangeState(State.Idle);
+                if (!IsGrounded) ChangeState(State.Jump); // 下墜(無起跳過程)
+                Rota();
+                _velocity.z = transform.forward.z * MoveSpeed;
+                _velocity.x = transform.forward.x * MoveSpeed;
+                break;
+            case State.Jump:
+                Rota();
+                _velocity.z = transform.forward.z * MoveSpeed;
+                _velocity.x = transform.forward.x * MoveSpeed;
+                if (IsGrounded) ChangeState(IsMoving ? State.Move : State.Idle);
+                break;
+            case State.Dash:
+                // 還未做
+                break;
+            case State.Attack:
+                _velocity.z = 0;
+                _velocity.x = 0;
+                break;
+        }
+    }
+    #endregion 狀態機
 
     #region 基礎参数
     private Controls _controls;
     private Vector3 _facingVector;
+    private Vector3 _velocity;
     [SerializeField]
-    private float _moveSpeed = 3f;
+    private float _moveSpeed = 3.5f;
     [SerializeField]
     private float _jumpHeight = 3f;
     private float _jumpPower = 1f;
     [SerializeField]
     private int _airJumpCountMax = 1;
     private float _airJumpCount;
-    private Vector3 _velocity;
+    [SerializeField]
+    private float _dashSpeed = 16f;
+    private float _dashDuration = 0.2f;
+
     public int _combo;
-    private bool _isAttacking;
+    //private bool _isAttacking; 不要了
+    private bool _inComboWindow;
 
     #endregion 基礎参数
 
@@ -63,13 +119,19 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
     /// <summary>
+    /// 處於會排他行動狀態
+    /// </summary>
+    //public bool InAction => IsAttacking;
+    /// <summary>
     /// 依據方向向量判斷是否正在移動
     /// </summary>
     public bool IsMoving => MoveInput != Vector2.zero;
+
+    public bool IsAttacking => state == State.Attack;
     /// <summary>
     /// 移動倍率(標準化 0~1)
     /// </summary>
-    public float MoveMulit => MoveInput.magnitude;
+    public float MoveMulti => MoveInput.magnitude;
     /// <summary>
     /// 當前移動可達速度
     /// </summary>
@@ -105,26 +167,29 @@ public class PlayerCtrl : MonoBehaviour
             if(_combo > 2) _combo = 1;
         }
     }
+
+    //public bool IsAttacking => _isAttacking;
     #endregion 公用参数
 
     #region 生命周期
     private void OnEnable()
     {
         InputCtrl.Play.Enable();
-        //操作行爲時間訂閲
+        //操作行爲事件訂閲
         InputCtrl.Play.Jump.performed += Jump;
         InputCtrl.Play.Attack.performed += Attack;
+        InputCtrl.Play.Dash.performed += Dash;
 
     }
 
-    
 
     private void OnDisable()
     {
         InputCtrl.Play.Disable();
-
+        //操作行爲事件取消訂閲
         InputCtrl.Play.Jump.performed -= Jump;
         InputCtrl.Play.Attack.performed -= Attack;
+        InputCtrl.Play.Dash.performed -= Dash;
     }
 
     void Start()
@@ -138,6 +203,7 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     void Update()
     {
+        StateLogic();
         AnimaUpdate();
         Rota();
         Movement();
@@ -148,22 +214,22 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     void AnimaUpdate()
     {
-        animaCtrl.SetBool("IsMoving", IsMoving);
-        animaCtrl.SetBool("IsGrounded", IsGrounded);
-        animaCtrl.SetFloat("MoveMulit", MoveMulit);
-        animaCtrl.SetFloat("VelocityY", VelocityY);
-        animaCtrl.SetInteger("Combo", Combo);
+        animaCtrl.SetBool(AniHash.IsMoving, IsMoving);
+        animaCtrl.SetBool(AniHash.IsGrounded, IsGrounded);
+        animaCtrl.SetBool(AniHash.IsAttacking, IsAttacking);
+        animaCtrl.SetFloat(AniHash.MoveMulti, MoveMulti);
+        animaCtrl.SetFloat(AniHash.VelocityY, VelocityY);
+        animaCtrl.SetInteger(AniHash.Combo, Combo);
 
     }
     #endregion 生命周期
 
+    #region 角色物理控制
     /// <summary>
     /// 動態套用
     /// </summary>
     void Movement()
     {
-        _velocity.z = transform.forward.z * MoveSpeed;
-        _velocity.x = transform.forward.x * MoveSpeed;
         //重力
         if (IsGrounded)
         {
@@ -183,11 +249,11 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     void Rota()
     {
-        if (!IsMoving) return;
         //轉向
         charCtrl.transform.rotation = Quaternion.LookRotation(FacingVector);
-
     }
+    #endregion 角色物理控制
+
     #region 跳躍功能
     /// <summary>
     /// 跳躍事件
@@ -195,7 +261,9 @@ public class PlayerCtrl : MonoBehaviour
     /// <param name="context">接收輸入</param>
     void Jump(InputAction.CallbackContext context)
     {
-        if (IsGrounded) 
+        if (state == State.Attack || state == State.Dash) return;
+
+        if (IsGrounded)
         {
             JumpHandle();
         }
@@ -209,32 +277,80 @@ public class PlayerCtrl : MonoBehaviour
 
     void JumpHandle()
     {
-        //向上
+        ChangeState(State.Jump);
         _velocity.y = Mathf.Sqrt(2 * G * H);
-        animaCtrl.SetTrigger("JumpTrigger");
+        animaCtrl.SetTrigger(AniHash.JumpTrigger);
     }
     #endregion 跳躍功能
-
 
     #region 攻擊功能
     private void Attack(InputAction.CallbackContext context)
     {
-        if (!_isAttacking) 
+        if(state == State.Dash) return;
+
+        if (IsAttacking && _inComboWindow) 
+        {
+            Combo++;
+            AttackHandle();
+            _inComboWindow = false;
+        }
+        else if (!IsAttacking)
         {//完全停止攻擊后：連續重啓
             Combo = 1;
-            animaCtrl.SetTrigger("AttackTrigger");
+            AttackHandle();
         }
-        
     }
 
-    public void StartAttack()
+    public void AttackHandle()
     {
-        _isAttacking = true;
+        ChangeState(State.Attack);
+        animaCtrl.SetTrigger(AniHash.AttackTrigger);
     }
+
+    public void StartAttack() 
+    {
+        _inComboWindow = false;
+    } 
 
     public void EndAttack()
     {
-        _isAttacking = false;
+        _inComboWindow = false;
+        if(state == State.Attack)
+        {
+            ChangeState(IsGrounded ? State.Idle : State.Jump);
+        }
+    }
+
+    public void OpenComboWindow()
+    {
+        _inComboWindow = true;
     }
     #endregion 攻擊功能
+
+    #region 衝刺功能
+
+    private void Dash(InputAction.CallbackContext context)
+    {
+        if (state == State.Attack || state == State.Dash) return;
+        ChangeState(State.Dash);
+        animaCtrl.SetTrigger(AniHash.DashTrigger);
+
+        _= DashHandle();
+    }
+
+    private async Task DashHandle()
+    {
+        charCtrl.transform.rotation = Quaternion.LookRotation(transform.forward);
+        _velocity = transform.forward * _dashSpeed;
+        _velocity.y = 0;
+        // 推進
+        await Task.Delay(TimeSpan.FromSeconds(_dashDuration));
+
+        if (state == State.Dash)
+        {
+            _velocity = Vector3.zero;
+            ChangeState(IsGrounded ? State.Idle : State.Jump);
+        }
+    }
+    #endregion 衝刺功能
 }
