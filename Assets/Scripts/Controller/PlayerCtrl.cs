@@ -119,9 +119,16 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
     /// <summary>
-    /// 處於會排他行動狀態
+    /// 角度補償(攝影機側轉量)
     /// </summary>
-    //public bool InAction => IsAttacking;
+    public Quaternion AngComp
+    {
+        get
+        {
+            return Quaternion.Euler(0f, GameManager.cameraRota.y, 0f);
+        }
+    }
+
     /// <summary>
     /// 依據方向向量判斷是否正在移動
     /// </summary>
@@ -168,12 +175,12 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    //public bool IsAttacking => _isAttacking;
     #endregion 公用参数
 
     #region 生命周期
     private void OnEnable()
     {
+        GameManager.SetCurrentPlayer(this);
         InputCtrl.Play.Enable();
         //操作行爲事件訂閲
         InputCtrl.Play.Jump.performed += Jump;
@@ -185,6 +192,7 @@ public class PlayerCtrl : MonoBehaviour
 
     private void OnDisable()
     {
+        GameManager.SetCurrentPlayer(null);
         InputCtrl.Play.Disable();
         //操作行爲事件取消訂閲
         InputCtrl.Play.Jump.performed -= Jump;
@@ -258,7 +266,7 @@ public class PlayerCtrl : MonoBehaviour
     void Rota()
     {// 轉向
         if (FacingVector != Vector3.zero)
-        charCtrl.transform.rotation = Quaternion.LookRotation(FacingVector);
+        charCtrl.transform.rotation = Quaternion.LookRotation(FacingVector) * AngComp;
     }
     #endregion 角色物理控制
 

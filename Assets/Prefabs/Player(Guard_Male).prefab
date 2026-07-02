@@ -56,9 +56,9 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.001
+  m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.08, z: 0}
 --- !u!114 &8608555863978343141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,9 +71,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f17ab26a02961e4a8833d6272930ced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   _moveSpeed: 3
   _jumpHeight: 3
   _airJumpCountMax: 1
+  _dashSpeed: 8
+  _combo: 0
 --- !u!1001 &5321586960328769383
 PrefabInstance:
   m_ObjectHideFlags: 0
