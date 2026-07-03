@@ -23,6 +23,7 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     private AnimaCtrl animaCtrl => _animaCtrl ??= GetComponentInChildren<AnimaCtrl>();
     #endregion 基础元件
+
     #region 狀態機
     /// <summary>
     /// 狀態機定義
@@ -90,9 +91,11 @@ public class PlayerCtrl : MonoBehaviour
     private float _dashSpeed = 16f;
     private float _dashDuration = 0.2f;
 
-    public int _combo;
+    private int _combo;
     //private bool _isAttacking; 不要了
     private bool _inComboWindow;
+    [SerializeField]
+    private GameObject[] _skillPrefabs;
 
     #endregion 基礎参数
 
@@ -340,6 +343,11 @@ public class PlayerCtrl : MonoBehaviour
     public void OpenComboWindow()
     {
         _inComboWindow = true;
+    }
+
+    public void OnAttack(Transform point)
+    {
+        Instantiate(_skillPrefabs[0], point.position, point.rotation);
     }
     #endregion 攻擊功能
 

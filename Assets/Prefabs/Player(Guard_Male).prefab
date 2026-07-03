@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &782594226812574495
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5257145485263110056}
+  m_Layer: 0
+  m_Name: HitPoint_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5257145485263110056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782594226812574495}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.09290771, y: -0.7009766, z: 0.043783616, w: -0.70575}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 943188509645675719}
+  m_LocalEulerAnglesHint: {x: -176, y: -90, z: -191.1}
 --- !u!1 &923224442051310717
 GameObject:
   m_ObjectHideFlags: 0
@@ -76,7 +107,39 @@ MonoBehaviour:
   _jumpHeight: 3
   _airJumpCountMax: 1
   _dashSpeed: 8
-  _combo: 0
+  _skillPrefabs:
+  - {fileID: 7857180437457266287, guid: 8a4af7b8ae1ab9343b62c90aacea34c9, type: 3}
+--- !u!1 &3352478649639413933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 667414259698852373}
+  m_Layer: 0
+  m_Name: HitPoint_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &667414259698852373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3352478649639413933}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.45753315, y: -0.5168766, z: -0.4181823, w: 0.59044534}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 943188509600835400}
+  m_LocalEulerAnglesHint: {x: 6.2, y: -87.29, z: -76.53}
 --- !u!1001 &5321586960328769383
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -131,19 +194,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4957605393579145647, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'Armature'\n\tTransform 'Armature'\n\tFrom
-        animation clip 'Walk'\n\tFrom animation clip 'Run'"
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4957605394338161568, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5257145485263110056}
+    - targetCorrespondingSourceObject: {fileID: 4957605394525706287, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 667414259698852373}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4957605393579145644, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1627137418978857398}
   m_SourcePrefab: {fileID: 100100000, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
+--- !u!4 &943188509600835400 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4957605394525706287, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
+  m_PrefabInstance: {fileID: 5321586960328769383}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &943188509645675719 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4957605394338161568, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
+  m_PrefabInstance: {fileID: 5321586960328769383}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &943188510547330761 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4957605393579145646, guid: ff0ef76b9624cb548afe27a6fc03b10f, type: 3}
@@ -166,3 +242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3034eb06b7b6b1a4c852dcb3ea6e9b55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _eventPoints:
+  - {fileID: 5257145485263110056}
+  - {fileID: 667414259698852373}
