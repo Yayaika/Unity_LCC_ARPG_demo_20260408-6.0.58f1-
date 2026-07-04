@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Unity.Cinemachine;
 using System;
+using System.Threading.Tasks;
 
 public class SkillCtrl : MonoBehaviour
 {
@@ -53,10 +54,22 @@ public class SkillCtrl : MonoBehaviour
     [SerializeField]
     private GameObject _hitEffectObj;
     /// <summary>
+    /// [二段]次級效果
+    /// </summary>
+    [SerializeField]
+    private GameObject _secondHitObj;
+    /// <summary>
+    /// [二段]觸發延遲
+    /// </summary>
+    [SerializeField]
+    private float _secondHitDelay = 0f;
+    /// <summary>
     /// 銷毀時間
     /// </summary>
     [SerializeField]
     private float _destroyTime = 2f;
+    [SerializeField]
+    private bool _useTargetPos = true;
     #endregion 基本參數
 
     #region 運作方式
@@ -79,6 +92,14 @@ public class SkillCtrl : MonoBehaviour
     /// [位移]是否啟用
     /// </summary>
     private bool CanFly => _flySpeed > 0f;
+    /// <summary>
+    /// 是否有二段打擊
+    /// </summary>
+    private bool UseSecondHit => _secondHitObj != null;
+    /// <summary>
+    /// 是否延遲觸發二段打
+    /// </summary>
+    private bool DelaySecondHit => _secondHitDelay > 0f;
     #endregion 運作方式
 
     #region 生命週期
@@ -101,8 +122,10 @@ public class SkillCtrl : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Tag))
-        {     
-            _hitEffectObj.SetActive(true);
+        {
+            SceondHit(_useTargetPos ? other.transform : transform);
+            //if (UseSecondHit) Instantiate(_secondHitObj, transform.position, Quaternion.identity);
+            if(_hitEffectObj) _hitEffectObj?.SetActive(true);
             if (HitShock) impulseSource.GenerateImpulseWithForce(_hitPower);
         }
     }
@@ -114,5 +137,25 @@ public class SkillCtrl : MonoBehaviour
         transform.Translate(Vector3.forward * FlySpeed);
     }
 
+    /// <summary>
+    /// 二段傷害
+    /// </summary>
+    /// <param name="hitTraget">觸發目標</param>
+    private void SceondHit(Transform hitTraget)
+    {
+        if (!UseSecondHit) return;
+        if (DelaySecondHit) _ = SceondHitDelay(hitTraget);
+        else Instantiate(_secondHitObj, hitTraget.position, Quaternion.identity);
+    }
+    /// <summary>
+    /// 二段傷害(延遲)
+    /// </summary>
+    /// <param name="hitTraget">觸發目標</param>
+    /// <returns></returns>
+    private async Task SceondHitDelay(Transform hitTraget)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(_secondHitDelay));
+        Instantiate(_secondHitObj, hitTraget.position, Quaternion.identity);
+    }
     #endregion 運行手段
 }

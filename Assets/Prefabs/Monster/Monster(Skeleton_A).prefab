@@ -861,6 +861,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7287286911800712939}
   - component: {fileID: 3801763369949597394}
+  - component: {fileID: 3335379031122691243}
   m_Layer: 0
   m_Name: Skeleton_A
   m_TagString: Untagged
@@ -895,7 +896,7 @@ Animator:
   m_GameObject: {fileID: 2389134177633299602}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8624151ff76b77c489cd541f6427435f, type: 3}
-  m_Controller: {fileID: 9100000, guid: ea34b2e592b22d04faee62b8eeb85aff, type: 2}
+  m_Controller: {fileID: 9100000, guid: 13ab899769b141540ac096b62c09048f, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -907,6 +908,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3335379031122691243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2389134177633299602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3034eb06b7b6b1a4c852dcb3ea6e9b55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventPoints:
+  - {fileID: 0}
 --- !u!1 &2446199818653363996
 GameObject:
   m_ObjectHideFlags: 0
@@ -1107,6 +1122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6906046790197778185}
   - component: {fileID: 7492598729278557309}
+  - component: {fileID: 4421393314699884211}
   m_Layer: 0
   m_Name: Monster(Skeleton_A)
   m_TagString: Enemy
@@ -1148,13 +1164,29 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1.6
   m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.08, z: 0}
+  m_Center: {x: 0, y: 0.85, z: 0}
+--- !u!114 &4421393314699884211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2657133771799626926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 057d7d463e190d044a27cebd2f18954e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  _moveSpeed: 5
+  _jumpHeight: 3
+  _skillPrefabs: []
 --- !u!1 &2687049585295626642
 GameObject:
   m_ObjectHideFlags: 0
