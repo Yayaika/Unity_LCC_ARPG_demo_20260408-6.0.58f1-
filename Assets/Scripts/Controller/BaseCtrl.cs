@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// 角色控制器抽象層
@@ -30,7 +31,7 @@ public abstract class BaseCtrl : MonoBehaviour
     /// <summary>
     /// 狀態機定義
     /// </summary>
-    public enum State { Idle, Move, Jump, Dash, Attack }
+    public enum State { Idle, Move, Jump, Dash, Attack, Hit, Dead }
     /// <summary>
     /// 角色當前狀態
     /// </summary>
@@ -55,10 +56,10 @@ public abstract class BaseCtrl : MonoBehaviour
                 break;
             case State.Move:
                 Rota();
-                if (!IsMoving) ChangeState(State.Idle);
-                if (!IsGrounded) ChangeState(State.Jump); // 下墜(無起跳過程)
                 _velocity.z = transform.forward.z * MoveSpeed;
                 _velocity.x = transform.forward.x * MoveSpeed;
+                if (!IsMoving) ChangeState(State.Idle);
+                if (!IsGrounded) ChangeState(State.Jump); // 下墜(無起跳過程)
                 break;
             case State.Jump:
                 Rota();
@@ -91,6 +92,27 @@ public abstract class BaseCtrl : MonoBehaviour
     [SerializeField]
     protected GameObject[] _skillPrefabs;
     #endregion 基本參數
+
+    #region 角色屬性參數
+    /// <summary>
+    /// 最大生命值
+    /// </summary>
+    [SerializeField]
+    protected float _maxHP = 100f;
+    /// <summary>
+    /// 當前的生命值
+    /// </summary>
+    protected float _HP;
+    [SerializeField]
+    protected float _breakDef;
+    public event Action<float, float> OnHPChanged;
+    //===== 屬性公用參數 =====
+    public float CurrentHP => _HP;
+    public float MaxHP => _maxHP;
+
+    public float PercentHP => _HP / _maxHP;
+    public bool IsDead => state == State.Dead;
+    #endregion 角色屬性參數
 
     #region 抽象公用屬性參數
     /// <summary>
@@ -160,6 +182,10 @@ public abstract class BaseCtrl : MonoBehaviour
     #endregion 抽象公用屬性參數
 
     #region 生命週期
+    protected virtual void Awake()
+    {
+        _HP = _maxHP;//登場回滿血(初始化)
+    }
 
     /// <summary>
     /// 狀態刷新
@@ -178,6 +204,7 @@ public abstract class BaseCtrl : MonoBehaviour
         animaCtrl.SetBool(AniHash.IsMoving, IsMoving);
         animaCtrl.SetBool(AniHash.IsGrounded, IsGrounded);
         animaCtrl.SetBool(AniHash.IsAttacking, IsAttacking);
+        //animaCtrl.SetBool(AniHash.IsDead, IsDead);
         animaCtrl.SetFloat(AniHash.MoveMulti, MoveMulti);
         animaCtrl.SetFloat(AniHash.VelocityY, VelocityY);
         animaCtrl.SetInteger(AniHash.Combo, Combo);
@@ -233,10 +260,66 @@ public abstract class BaseCtrl : MonoBehaviour
     }
     #endregion 基礎戰鬥動作
 
+    #region 受擊與傷害邏輯
+    protected virtual void SetOnHPChangedEvent(Action<float, float> action)
+    {
+        OnHPChanged = action;
+        OnHPChanged?.Invoke(CurrentHP, MaxHP);
+    }
+    /// <summary>
+    /// 共通傷害執行接口
+    /// </summary>
+    /// <param name="damage">傷害值</param>
+    public virtual void TakeDamage(float damage)
+    {
+        if (IsDead) return;//避免鞭屍
+        _HP -= damage;
+        if (damage > 0)
+        {
+            HitHandle(damage);
+            //有UI事件訂閱：執行數值傳遞
+            OnHPChanged?.Invoke(CurrentHP, MaxHP);
+        }
+        if (_HP <= 0) Die();
+    }
+    /// <summary>
+    /// 觸發受傷狀態與動畫
+    /// </summary>
+    protected virtual void HitHandle(float damage)
+    {
+        ChangeState(State.Hit);
+        _velocity.x = 0;
+        _velocity.z = 0;
+        if (damage > _breakDef) animaCtrl.SetTrigger(AniHash.HitTrigger);
+    }
+    /// <summary>
+    /// 觸發死亡狀態與動畫
+    /// </summary>
+    protected virtual void Die()
+    {
+        _HP = 0;
+        ChangeState(State.Dead);
+        //下墜中的物理落地後執行
+        //_velocity = Vector3.zero;
+        //charCtrl.enabled = false;
+        animaCtrl.SetTrigger(AniHash.DeadTrigger);
+    }
+
+    public void EndHit()
+    {
+        if (state == State.Hit)
+            ChangeState(IsGrounded ? State.Idle : State.Jump);
+    }
+    #endregion 受擊與傷害邏輯
+
     #region 動畫控制取用
     public void StartAttack()
     {
         _inComboWindow = false;
+    }
+    public void OpenComboWindow()
+    {
+        _inComboWindow = true;
     }
 
     public void EndAttack()
@@ -248,10 +331,6 @@ public abstract class BaseCtrl : MonoBehaviour
         }
     }
 
-    public void OpenComboWindow()
-    {
-        _inComboWindow = true;
-    }
 
     public void OnAttack(Transform point)
     {

@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventPoints:
-  - {fileID: 0}
+  - {fileID: 4228853700597075832, guid: 1eb4efad3217b0542a78a44dbc42d1ce, type: 3}
 --- !u!1 &2446199818653363996
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,9 +1184,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  _moveSpeed: 5
-  _jumpHeight: 3
+  _moveSpeed: 2
+  _jumpHeight: 2
   _skillPrefabs: []
+  _patrolRange: 1
+  _chaseRange: 10
+  _attackRange: 2
+  _attackCD: 2
 --- !u!1 &2687049585295626642
 GameObject:
   m_ObjectHideFlags: 0
