@@ -104,7 +104,7 @@ public class EnemyCtrl : BaseCtrl
     /// </summary>
     void AIDecision()
     {
-        if (state == State.Attack || state == State.Dash) return;
+        if (IsDead || state == State.Hit || state == State.Attack || state == State.Dash) return;
         if (Target == null)
         {//無目標時保持靜止狀態
             _aiMoveInput = Vector2.zero;

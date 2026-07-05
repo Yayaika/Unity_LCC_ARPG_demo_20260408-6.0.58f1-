@@ -24394,8 +24394,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 2
-  _hitEffectObj: {fileID: 5926058958044158327}
-  _secondHitObj: {fileID: 9083106418724263595, guid: 0d9c3cb740359ee4e91c2a201d0eb0f8, type: 3}
+  _damage: 10
+  _hitEffectObj: {fileID: 0}
+  _secondHitObj: {fileID: 0}
   _secondHitDelay: 0
   _destroyTime: 2
   _useTargetPos: 1

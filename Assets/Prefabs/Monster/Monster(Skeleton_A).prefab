@@ -1188,7 +1188,7 @@ MonoBehaviour:
   _moveSpeed: 2
   _jumpHeight: 2
   _skillPrefabs:
-  - {fileID: 7857180437457266287, guid: 2fa31b5872d7cca4c9afebb074690af4, type: 3}
+  - {fileID: 27245915688278233, guid: 95f04680eab701b4e99832ff150c0961, type: 3}
   _maxHP: 100
   _breakDef: 0
   _patrolRange: 1
