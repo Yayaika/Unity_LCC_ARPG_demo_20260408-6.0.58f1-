@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 8608555863978343141}
   m_Layer: 0
   m_Name: Player(Guard_Male)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,13 +103,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  _moveSpeed: 3
+  _moveSpeed: 4
   _jumpHeight: 3
   _skillPrefabs:
   - {fileID: 7857180437457266287, guid: 8a4af7b8ae1ab9343b62c90aacea34c9, type: 3}
   - {fileID: 9083106418724263595, guid: 1eb4efad3217b0542a78a44dbc42d1ce, type: 3}
+  _maxHP: 100
+  _breakDef: 0
   _airJumpCountMax: 1
-  _dashSpeed: 8
+  _dashSpeed: 10
 --- !u!1 &3352478649639413933
 GameObject:
   m_ObjectHideFlags: 0

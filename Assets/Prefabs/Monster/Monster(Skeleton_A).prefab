@@ -921,7 +921,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventPoints:
-  - {fileID: 4228853700597075832, guid: 1eb4efad3217b0542a78a44dbc42d1ce, type: 3}
+  - {fileID: 779209973495798427}
+  - {fileID: 2784451915899369608}
 --- !u!1 &2446199818653363996
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1187,10 @@ MonoBehaviour:
   state: 0
   _moveSpeed: 2
   _jumpHeight: 2
-  _skillPrefabs: []
+  _skillPrefabs:
+  - {fileID: 7857180437457266287, guid: 2fa31b5872d7cca4c9afebb074690af4, type: 3}
+  _maxHP: 100
+  _breakDef: 0
   _patrolRange: 1
   _chaseRange: 10
   _attackRange: 2
@@ -1672,6 +1676,37 @@ Transform:
   - {fileID: 8651502599818513342}
   m_Father: {fileID: 481811337862550701}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4399348126179355566
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2784451915899369608}
+  m_Layer: 0
+  m_Name: EnemyHitPoint_R_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2784451915899369608
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4399348126179355566}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.52772355, y: -0.8369649, z: -0.13381217, w: 0.055604212}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 858546824601341451}
+  m_LocalEulerAnglesHint: {x: 189.515, y: 13.744003, z: 114.386}
 --- !u!1 &4700243481512358573
 GameObject:
   m_ObjectHideFlags: 0
@@ -2088,6 +2123,37 @@ Transform:
   - {fileID: 8402944534879911414}
   m_Father: {fileID: 42816368229761414}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5901387947304687292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 779209973495798427}
+  m_Layer: 0
+  m_Name: EnemyHitPoint_R_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &779209973495798427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5901387947304687292}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.43283042, y: -0.6606394, z: -0.47021323, w: 0.3938438}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 858546824601341451}
+  m_LocalEulerAnglesHint: {x: 254.2, y: 24.597, z: 227.738}
 --- !u!1 &5968928964090032651
 GameObject:
   m_ObjectHideFlags: 0
@@ -3221,6 +3287,8 @@ Transform:
   - {fileID: 3495707920409695947}
   - {fileID: 1723835232839413777}
   - {fileID: 9172374213967939662}
+  - {fileID: 779209973495798427}
+  - {fileID: 2784451915899369608}
   m_Father: {fileID: 3027613133357686857}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8632714713109027566

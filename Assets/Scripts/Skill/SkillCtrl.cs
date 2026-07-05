@@ -48,6 +48,13 @@ public class SkillCtrl : MonoBehaviour
             return string.Empty;
         }
     }
+
+    /// <summary>
+    /// 基本傷害
+    /// </summary>
+    [SerializeField]
+    private float _damage = 10f;
+
     /// <summary>
     /// 撞擊效果
     /// </summary>
@@ -123,8 +130,11 @@ public class SkillCtrl : MonoBehaviour
     {
         if (other.CompareTag(Tag))
         {
+            BaseCtrl actor = other.GetComponent<BaseCtrl>();
+            if (!actor) return;
+            actor.TakeDamage(_damage);
             SceondHit(_useTargetPos ? other.transform : transform);
-            //if (UseSecondHit) Instantiate(_secondHitObj, transform.position, Quaternion.identity);
+
             if(_hitEffectObj) _hitEffectObj?.SetActive(true);
             if (HitShock) impulseSource.GenerateImpulseWithForce(_hitPower);
         }

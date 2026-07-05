@@ -204,7 +204,7 @@ public abstract class BaseCtrl : MonoBehaviour
         animaCtrl.SetBool(AniHash.IsMoving, IsMoving);
         animaCtrl.SetBool(AniHash.IsGrounded, IsGrounded);
         animaCtrl.SetBool(AniHash.IsAttacking, IsAttacking);
-        //animaCtrl.SetBool(AniHash.IsDead, IsDead);
+        animaCtrl.SetBool(AniHash.IsDead, IsDead);
         animaCtrl.SetFloat(AniHash.MoveMulti, MoveMulti);
         animaCtrl.SetFloat(AniHash.VelocityY, VelocityY);
         animaCtrl.SetInteger(AniHash.Combo, Combo);
@@ -218,7 +218,7 @@ public abstract class BaseCtrl : MonoBehaviour
     protected void Movement()
     {
         Gravity();//重力
-        charCtrl.Move(Velocity);
+        if (charCtrl.enabled) charCtrl.Move(Velocity);
     }
     /// <summary>
     /// 重力
@@ -227,8 +227,16 @@ public abstract class BaseCtrl : MonoBehaviour
     {
         if (IsGrounded)
         {
-            _velocity.y = -1f;
-            _jumpPower = 1f;
+            if (IsDead)
+            {
+                _velocity = Vector3.zero;
+                charCtrl.enabled = false;
+            }
+            else
+            {
+                _velocity.y = -1f;
+                _jumpPower = 1f;
+            }
         }
         else if (state != State.Dash)
         {

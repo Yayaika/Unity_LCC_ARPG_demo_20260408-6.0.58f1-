@@ -79,6 +79,7 @@ public class AnimaCtrl : MonoBehaviour
         baseCtrl?.OpenComboWindow();
     }
 
+    public void EndHit() => baseCtrl?.EndHit();
     #endregion 動畫觸發事件
 }
 
