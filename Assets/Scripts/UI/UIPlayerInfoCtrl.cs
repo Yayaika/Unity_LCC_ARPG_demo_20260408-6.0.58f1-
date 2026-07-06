@@ -53,6 +53,11 @@ public class UIPlayerInfoCtrl : MonoBehaviour
     /// </summary>
     private void InitialUI()
     {
+        if (_playerDB == null)
+        {
+            Debug.LogWarning("PlayerDB 尚未準備就緒！");
+            return;
+        }
         _headImg.sprite = _playerDB.GetPlayerData(PlayerIndex).icon;
         _nameText.text = _playerDB.GetPlayerData(PlayerIndex).name;
     }

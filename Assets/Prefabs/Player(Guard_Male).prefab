@@ -111,7 +111,7 @@ MonoBehaviour:
   _maxHP: 100
   _breakDef: 0
   _airJumpCountMax: 1
-  _dashSpeed: 10
+  _dashSpeed: 18
 --- !u!1 &3352478649639413933
 GameObject:
   m_ObjectHideFlags: 0
