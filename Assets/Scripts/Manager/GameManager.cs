@@ -26,7 +26,7 @@ public static class GameManager
             return playerCtrl != null ? playerCtrl.transform.position : Vector3.zero;
         }
     }
-    
+
     /// <summary>
     /// 設定(初始化)當前操作角色
     /// </summary>

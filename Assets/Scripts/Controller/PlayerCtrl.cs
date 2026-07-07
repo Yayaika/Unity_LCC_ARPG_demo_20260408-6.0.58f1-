@@ -27,7 +27,7 @@ public class PlayerCtrl : BaseCtrl
     /// 從輸入取得的方向向量
     /// </summary>
     public override Vector2 MoveInput => InputCtrl.Play.Move.ReadValue<Vector2>();
-    
+
     /// <summary>
     /// 角度補償(攝影機側轉量)
     /// </summary>
@@ -71,7 +71,7 @@ public class PlayerCtrl : BaseCtrl
 
     void Start()
     {
-        
+
     }
 
 
@@ -129,9 +129,9 @@ public class PlayerCtrl : BaseCtrl
     #region 攻擊功能
     private void Attack(InputAction.CallbackContext context)
     {
-        if(state == State.Dash) return;
+        if (state == State.Dash) return;
 
-        if (IsAttacking && _inComboWindow) 
+        if (IsAttacking && _inComboWindow)
         {
             Combo++;
             AttackHandle();
@@ -153,7 +153,7 @@ public class PlayerCtrl : BaseCtrl
         ChangeState(State.Dash);
         animaCtrl.SetTrigger(AniHash.DashTrigger);
 
-        _= DashHandle();
+        _ = DashHandle();
     }
 
     private async Task DashHandle()
