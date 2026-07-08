@@ -8,10 +8,10 @@ public class RoomCtrl : MonoBehaviour
     #region 基礎元建
     [SerializeField]
     private CinemachineCamera cinemachineCamera;
-    //[SerializeField]
-    //private PlayableDirector director;
-    //[SerializeField]
-    //private Collider doorBlock;
+    [SerializeField]
+    private PlayableDirector director;
+    [SerializeField]
+    private Collider doorBlock;
     //[SerializeField]
     //private BossCtrl bossCtrl;
     #endregion 基礎元建
@@ -21,8 +21,8 @@ public class RoomCtrl : MonoBehaviour
     {
         if (other.CompareTag(Tag))
         {
-            //director.Play();
-            //doorBlock.isTrigger = false;
+            director.Play();
+            doorBlock.isTrigger = false;
             cinemachineCamera.Priority.Value = 100;
             //_ = bossCtrl.Ready((float)director.duration);
         }
