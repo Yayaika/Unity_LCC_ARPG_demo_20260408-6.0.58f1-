@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -69,6 +70,27 @@ public class BossCtrl : EnemyCtrl
     private bool CanCastSkill => _skillTimer >= _skillGCD;
     #endregion 專用屬性參數
 
+    #region 招式資料庫
+    [SerializeField]
+    private BossSkillDB[] _skills;
+    /// <summary>
+    /// 施放中的招式索引號碼
+    /// </summary>
+    private int _castSkillIndex = -1;
+    /// <summary>
+    /// 抽取技能時的權重分母
+    /// </summary>
+    private int totalWeight = 0;
+    /// <summary>
+    /// 符合施放條件的技能清單
+    /// </summary>
+    private List<int> skillList = new List<int>();
+    /// <summary>
+    /// 施放中的技能
+    /// </summary>
+    private BossSkillDB castingSkill;
+    #endregion 招式資料庫
+
     #region 訂閱事件
     /// <summary>
     /// 階段變換觸發事件
@@ -117,8 +139,6 @@ public class BossCtrl : EnemyCtrl
         }
     }
     #endregion 生命週期
-
-
 
     #region 傷害階段切換
     public override void TakeDamage(float damage)

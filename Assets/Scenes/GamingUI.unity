@@ -565,6 +565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 826443d472d3cd247811bd4a468ebe4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  openOnAwake: 0
   _nameText: {fileID: 1749540402}
   _hpBarImg: {fileID: 1799526738}
   _hpBarText: {fileID: 73697251}

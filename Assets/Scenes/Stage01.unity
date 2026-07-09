@@ -10452,7 +10452,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 4
-  m_Radius: 1
+  m_Radius: 1.9
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -10473,15 +10473,20 @@ MonoBehaviour:
   _moveSpeed: 5
   _jumpHeight: 3
   _skillPrefabs: []
-  _maxHP: 300
+  _maxHP: 400
   _breakDef: 0
   _patrolRange: 3
-  _chaseRange: 10
+  _chaseRange: 30
   _attackRange: 2
   _attackCD: 2
   _p2Threshold: 0.7
   _p3Threshold: 0.3
   _ptDuration: 3
+  _skills:
+  - {fileID: 11400000, guid: 652871e00e2e4b04eb1e84584589d1f5, type: 2}
+  - {fileID: 11400000, guid: 2e2b046d24e81b04c8e5b4d976420379, type: 2}
+  - {fileID: 11400000, guid: 3a5d87e3d4653a545a157ebc7af4afaa, type: 2}
+  - {fileID: 11400000, guid: 282d58aa326ea72479506eddec04770f, type: 2}
 --- !u!1 &1360943624
 GameObject:
   m_ObjectHideFlags: 0

@@ -24398,10 +24398,10 @@ MonoBehaviour:
   _hitEffectObj: {fileID: 0}
   _secondHitObj: {fileID: 0}
   _secondHitDelay: 0
-  _destroyTime: 2
+  _destroyTime: 0.4
   _useTargetPos: 1
   _hitPower: 0.1
-  _flySpeed: 0.5
+  _flySpeed: 0.1
 --- !u!114 &455461811122467592
 MonoBehaviour:
   m_ObjectHideFlags: 0
