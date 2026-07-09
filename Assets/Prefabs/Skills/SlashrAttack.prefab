@@ -24539,10 +24539,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 1
+  _damage: 10
   _hitEffectObj: {fileID: 0}
   _secondHitObj: {fileID: 9083106418724263595, guid: cf2a5941c9ee357489805f083bfc9ecb, type: 3}
   _secondHitDelay: 0.15
-  _destroyTime: 2
+  _destroyTime: 0.3
   _useTargetPos: 0
   _hitPower: 0.1
   _flySpeed: 0

@@ -228,6 +228,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "256c339a-f528-4899-8356-78f72808cd52",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "eec6a4bf-9889-4736-90c5-d8140654eaec",
                     "path": "2DVector",

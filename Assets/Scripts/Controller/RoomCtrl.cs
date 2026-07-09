@@ -12,8 +12,8 @@ public class RoomCtrl : MonoBehaviour
     private PlayableDirector director;
     [SerializeField]
     private Collider doorBlock;
-    //[SerializeField]
-    //private BossCtrl bossCtrl;
+    [SerializeField]
+    private BossCtrl bossCtrl;
     #endregion 基礎元建
     private const string Tag = "Player";
 
@@ -24,7 +24,7 @@ public class RoomCtrl : MonoBehaviour
             director.Play();
             doorBlock.isTrigger = false;
             cinemachineCamera.Priority.Value = 100;
-            //_ = bossCtrl.Ready((float)director.duration);
+            _ = bossCtrl.Ready((float)director.duration);
         }
     }
 

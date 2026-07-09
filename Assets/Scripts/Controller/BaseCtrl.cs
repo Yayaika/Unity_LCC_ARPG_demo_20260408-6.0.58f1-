@@ -35,7 +35,7 @@ public abstract class BaseCtrl : MonoBehaviour
     /// <summary>
     /// 角色當前狀態
     /// </summary>
-    public State state = State.Idle;
+    protected State state = State.Idle;
     /// <summary>
     /// 切換狀態
     /// </summary>

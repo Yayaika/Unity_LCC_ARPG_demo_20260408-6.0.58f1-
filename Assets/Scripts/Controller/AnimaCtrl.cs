@@ -33,6 +33,12 @@ public class AnimaCtrl : MonoBehaviour
     }
     #region 動畫系統基本方法
     /// <summary>
+    /// 設定圖層權重
+    /// </summary>
+    /// <param name="index">圖層序列號</param>
+    /// <param name="weight">權重值</param>
+    public void SetLayerWeight(int index, float weight) => animator.SetLayerWeight(index, weight);
+    /// <summary>
     /// 設置動畫觸發
     /// </summary>
     /// <param name="name"></param>

@@ -69,14 +69,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 2
-  _damage: 10
+  _damage: 5
   _hitEffectObj: {fileID: 0}
   _secondHitObj: {fileID: 0}
   _secondHitDelay: 0
-  _destroyTime: 2
+  _destroyTime: 0.3
   _useTargetPos: 1
   _hitPower: 0
-  _flySpeed: 0.1
+  _flySpeed: 0
 --- !u!114 &7220784529445375135
 MonoBehaviour:
   m_ObjectHideFlags: 0

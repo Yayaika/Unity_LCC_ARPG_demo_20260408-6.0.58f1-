@@ -9,7 +9,7 @@ public class CameraCtrl : MonoBehaviour
     [Range(0f, 20f)]
     private float distance;
     [SerializeField]
-    [Range(10f, 80f)]
+    [Range(-30f, 80f)]
     private float angX;
     [SerializeField]
     [Range(0f, 360f)]
@@ -98,7 +98,7 @@ public class CameraCtrl : MonoBehaviour
             angX -= lookInput.y * rotateSpeed * Time.deltaTime;
 
             // 限制上下視角最大與最小範圍，防止翻轉 (限制與你原本的 Inspector Range 一致)
-            angX = Mathf.Clamp(angX, 10f, 80f);
+            angX = Mathf.Clamp(angX, -30f, 80f);
 
             // 確保 angY 始終保持在 0 ~ 360 度之間循環
             if (angY < 0f) angY += 360f;

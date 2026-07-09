@@ -24394,13 +24394,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 1
+  _damage: 10
   _hitEffectObj: {fileID: 5926058958044158327}
   _secondHitObj: {fileID: 9083106418724263595, guid: d900e83e76e8d4640957a8c5226349d2, type: 3}
   _secondHitDelay: 0
-  _destroyTime: 2
+  _destroyTime: 0.3
   _useTargetPos: 1
   _hitPower: 0.1
-  _flySpeed: 0.5
+  _flySpeed: 0.1
 --- !u!114 &455461811122467592
 MonoBehaviour:
   m_ObjectHideFlags: 0
