@@ -340,7 +340,7 @@ public abstract class BaseCtrl : MonoBehaviour
     }
 
 
-    public void OnAttack(Transform point)
+    public virtual void OnAttack(Transform point)
     {
         if (_skillPrefabs == null || _skillPrefabs.Length == 0) return;
         Instantiate(_skillPrefabs[0], point.position, point.rotation);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BossCtrl : EnemyCtrl
 {
@@ -140,6 +141,83 @@ public class BossCtrl : EnemyCtrl
     }
     #endregion 生命週期
 
+    #region 攻擊行為(招式抽取)
+    protected override void Attack()
+    {//不能攻擊或正在切換狀態：不執行Attack
+        if (!CanAttack || _inPhaseTrans) return;
+        _castSkillIndex = ChooseSkill();
+        if (_castSkillIndex > 0)
+        {
+            charCtrl.transform.rotation = Quaternion.LookRotation(DirToTarget);//死盯著目標對象
+            castingSkill = _skills[_castSkillIndex];
+            ChangeState(State.Attack);
+            animaCtrl.SetTrigger(castingSkill.triggerHash);//播放攻擊動畫(前搖)
+        }
+        else base.Attack();
+    }
+
+    /// <summary>
+    /// 抽選技能
+    /// </summary>
+    /// <returns>技能的序號</returns>
+    private int ChooseSkill()
+    {
+        if (_skills.Length == 0) return -1;
+
+        totalWeight = 0;//權重分母
+        skillList.Clear();//清空技能備選清單
+        _castSkillIndex = -1;//起點重置
+
+        foreach (BossSkillDB skill in _skills)
+        {//遍歷SkillDB
+            _castSkillIndex++;//流水號
+            if (skill == null || skill.weight <= 0) continue;//該輪跳過
+            //if (冷卻未到) continue;
+            if (DistanceToTarget < skill.minRange || DistanceToTarget > skill.maxRange) continue;//不再施放範圍內
+            if (!IsAllowedPhases(skill.allowedPhases)) continue;//不再施放階段內
+            totalWeight += skill.weight;//計算權重分母
+            skillList.Add(_castSkillIndex);
+        }
+
+        int roll = Random.Range(0, totalWeight);
+        foreach (int index in skillList)
+        {
+            if (roll < _skills[index].weight) return index;
+            else roll -= _skills[index].weight;
+        }
+        return -1;
+    }
+    /// <summary>
+    /// 階段檢定
+    /// </summary>
+    /// <param name="flag">階段旗標</param>
+    /// <returns>是否包含</returns>
+    private bool IsAllowedPhases(PhaseFlag flag)
+    {
+        return _currentPhase switch
+        {
+            Phase.P1 => (flag & PhaseFlag.P1) != 0,
+            Phase.P2 => (flag & PhaseFlag.P2) != 0,
+            Phase.P3 => (flag & PhaseFlag.P3) != 0,
+            _ => false,
+        };
+        /*
+        switch (_currentPhase)
+        {
+            case Phase.P1: return (flag & PhaseFlag.P1) != 0;
+            case Phase.P2: return (flag & PhaseFlag.P2) != 0;
+            case Phase.P3: return (flag & PhaseFlag.P3) != 0;
+            default: return false;
+        }*/
+    }
+
+    public override void OnAttack(Transform point)
+    {
+        if (!castingSkill) return;
+        Instantiate(castingSkill.skillPrefab, point.position, transform.rotation);
+    }
+    #endregion 攻擊行為(招式抽取)
+
     #region 傷害階段切換
     public override void TakeDamage(float damage)
     {
@@ -163,7 +241,7 @@ public class BossCtrl : EnemyCtrl
         _isInvincible = false;
         ChangeState(State.Idle);
     }
-
-    
     #endregion 傷害階段切換
+
+
 }
