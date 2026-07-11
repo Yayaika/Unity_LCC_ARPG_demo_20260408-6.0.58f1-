@@ -23,7 +23,6 @@ public class BossCtrl : EnemyCtrl
         P3 = 1 << 2,//100
         All = P1 | P2 | P3//111
     }
-
     /// <summary>
     /// 當前的狀態階段(用HP百分比計算)
     /// </summary>
@@ -37,7 +36,6 @@ public class BossCtrl : EnemyCtrl
         }
     }
     private Phase _lastPhase = Phase.P0;
-
     #endregion 定義
 
     #region 專用屬性參數
@@ -104,17 +102,16 @@ public class BossCtrl : EnemyCtrl
     #endregion 訂閱事件
 
     #region 生命週期
+
     protected override void Update()
     {
         if (_lastPhase != Phase.P0)
         {
             base.Update();
             //BOSS特技
-            //SkillCooldown();
+            SkillCooldown();
         }
-        GameManager.SetCurrentBoss(this);
     }
-
     /// <summary>
     /// 預備任務
     /// </summary>
@@ -127,6 +124,7 @@ public class BossCtrl : EnemyCtrl
         animaCtrl.SetLayerWeight(1, 0f);//準備動畫(表演層)關閉
         GameManager.SetCurrentBoss(this);//正式初始化
     }
+
     private void SkillCooldown()
     {
         if (CanCastSkill)
@@ -242,6 +240,4 @@ public class BossCtrl : EnemyCtrl
         ChangeState(State.Idle);
     }
     #endregion 傷害階段切換
-
-
 }

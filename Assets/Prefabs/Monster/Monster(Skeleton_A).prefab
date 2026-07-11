@@ -1184,7 +1184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057d7d463e190d044a27cebd2f18954e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
   _moveSpeed: 2
   _jumpHeight: 2
   _skillPrefabs:
@@ -1193,7 +1192,7 @@ MonoBehaviour:
   _breakDef: 0
   _patrolRange: 1
   _chaseRange: 10
-  _attackRange: 2
+  _attackRange: 1.6
   _attackCD: 2
 --- !u!1 &2687049585295626642
 GameObject:
