@@ -24328,9 +24328,9 @@ GameObject:
   - component: {fileID: 8027361292390767277}
   - component: {fileID: 1241401826128498808}
   - component: {fileID: 455461811122467592}
-  - component: {fileID: 593484592591618464}
+  - component: {fileID: -5798787846850382121}
   m_Layer: 0
-  m_Name: NormalEnemyAttack
+  m_Name: NormalAttack_R
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -24380,8 +24380,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0.2}
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0.3}
 --- !u!114 &1241401826128498808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24394,16 +24394,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1228a45cc28e9d4e936d2a76343b8ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: 2
-  _damage: 10
-  _hitEffectObj: {fileID: 0}
+  target: 1
+  _damage: 25
+  _hitEffectObj: {fileID: 5926058958044158327}
   _secondHitObj: {fileID: 0}
   _secondHitDelay: 0
   _destroyTime: 0.4
   _useTargetPos: 1
   _hitPower: 0.1
   _flySpeed: 0.1
-  _hitSound: {fileID: 8300000, guid: 4a98c44125d8c40abbd772ea45596990, type: 3}
+  _launchSound: {fileID: 8300000, guid: 498b8022009a34a0497c059689432d01, type: 3}
+  _hitSound: {fileID: 8300000, guid: 509e1c4bcb24c4aa399c6b90e8e3e4da, type: 3}
 --- !u!114 &455461811122467592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24457,7 +24458,7 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
---- !u!82 &593484592591618464
+--- !u!82 &-5798787846850382121
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24468,8 +24469,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 4a98c44125d8c40abbd772ea45596990, type: 3}
-  m_PlayOnAwake: 0
+  m_Resource: {fileID: 8300000, guid: 63c2e9d937644482190088288bf5e06b, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

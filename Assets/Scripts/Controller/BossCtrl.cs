@@ -109,7 +109,12 @@ public class BossCtrl : EnemyCtrl
         {
             base.Update();
             //BOSS特技
-            SkillCooldown();
+            // 【修正5】：加入死亡判斷，死亡後停止計算技能冷卻，避免鞭屍重置狀態
+            if (!IsDead)
+            {
+                //BOSS特技
+                SkillCooldown();
+            }
         }
     }
     /// <summary>
@@ -142,16 +147,21 @@ public class BossCtrl : EnemyCtrl
     #region 攻擊行為(招式抽取)
     protected override void Attack()
     {//不能攻擊或正在切換狀態：不執行Attack
-        if (!CanAttack || _inPhaseTrans) return;
+        if (IsDead || !CanAttack || _inPhaseTrans) return;
         _castSkillIndex = ChooseSkill();
-        if (_castSkillIndex > 0)
+        if (_castSkillIndex >= 0) // 改為 >= 0 才能正確觸發第0個技能
         {
             charCtrl.transform.rotation = Quaternion.LookRotation(DirToTarget);//死盯著目標對象
             castingSkill = _skills[_castSkillIndex];
             ChangeState(State.Attack);
             animaCtrl.SetTrigger(castingSkill.triggerHash);//播放攻擊動畫(前搖)
         }
-        else base.Attack();
+        else
+        {
+            // 修正3：如果是普攻，必須清空 castingSkill，避免殘留上一次施放的技能資料！
+            castingSkill = null;
+            base.Attack();
+        }
     }
 
     /// <summary>
@@ -209,14 +219,26 @@ public class BossCtrl : EnemyCtrl
         }*/
     }
 
-    public override void OnAttack(Transform point)
+    public override void OnAttack(Transform point, int index = 0)
     {
-        if (!castingSkill) return;
+        if (!castingSkill)
+        {
+            // 【修正4】：如果沒有 castingSkill (代表是普攻)，呼叫父類的 OnAttack 來生成普攻的預設特效
+            // 如果是普攻，呼叫父類並把 index 傳下去
+            base.OnAttack(point, index);
+            return;
+        }
         Instantiate(castingSkill.skillPrefab, point.position, transform.rotation);
     }
     #endregion 攻擊行為(招式抽取)
 
     #region 傷害階段切換
+    // 【新增】覆寫父類的死亡行為，並觸發 OnDefeated 事件
+    protected override void Die()
+    {
+        base.Die(); // 先執行原本扣血、切換Dead狀態、播動畫的行為
+        OnDefeated?.Invoke(); // 通知 RoomCtrl 說 Boss 死掉了！
+    }
     public override void TakeDamage(float damage)
     {
         if (_isInvincible) return;

@@ -45,7 +45,30 @@ public class PlayerCtrl : BaseCtrl
     public bool CanAirJump => _airJumpCount > 0;
     #endregion 公用参数
 
+    #region 復活參數
+    [Header("復活設定")]
+
+    [SerializeField]
+    private GameObject _respawnVFX;     // 復活特效預製體
+    [SerializeField]
+    private float _respawnDelay = 2f;   // 死亡後躺在地上的等待時間
+
+    // 【新增】自動記錄的出生點座標與旋轉，不需要在 Inspector 拖曳！
+    private Vector3 _initialSpawnPos;
+    private Quaternion _initialSpawnRot;
+    #endregion
+
     #region 生命周期
+    // 【新增這整個 Awake 方法】
+    protected override void Awake()
+    {
+        // 1. 呼叫父類別的 Awake，確保玩家生成時會執行 _HP = _maxHP (回滿血)
+        base.Awake();
+
+        // 2. 記錄剛生成時的出生點座標與面向角度
+        _initialSpawnPos = transform.position;
+        _initialSpawnRot = transform.rotation;
+    }
     private void OnEnable()
     {
         GameManager.SetCurrentPlayer(this);
@@ -109,6 +132,8 @@ public class PlayerCtrl : BaseCtrl
     /// <param name="context">接收輸入</param>
     void Jump(InputAction.CallbackContext context)
     {
+        // 【新增修正】如果已經死亡，直接無視跳躍請求
+        if (IsDead) return;
         if (state == State.Attack || state == State.Dash) return;
 
         if (IsGrounded)
@@ -129,6 +154,8 @@ public class PlayerCtrl : BaseCtrl
     #region 攻擊功能
     private void Attack(InputAction.CallbackContext context)
     {
+        // 【新增修正】如果已經死亡，直接無視衝刺請求
+        if (IsDead) return;
         if (state == State.Dash) return;
 
         if (IsAttacking && _inComboWindow)
@@ -149,6 +176,8 @@ public class PlayerCtrl : BaseCtrl
 
     private void Dash(InputAction.CallbackContext context)
     {
+        // 【新增修正】如果已經死亡，直接無視衝刺請求
+        if (IsDead) return;
         if (state == State.Attack || state == State.Dash) return;
         ChangeState(State.Dash);
         animaCtrl.SetTrigger(AniHash.DashTrigger);
@@ -171,4 +200,37 @@ public class PlayerCtrl : BaseCtrl
         }
     }
     #endregion 衝刺功能
+
+    #region 玩家死亡與復活
+    protected override void Die()
+    {
+        base.Die(); // 先執行 BaseCtrl 的死亡邏輯 (切換Dead狀態、播死亡動畫、扣血)
+        _ = RespawnHandle(); // 啟動非同步的復活程序
+    }
+
+    private async Task RespawnHandle()
+    {
+        // 1. 等待死亡動畫播完
+        await Task.Delay(TimeSpan.FromSeconds(_respawnDelay));
+
+        // 2. 恢復滿血、切換狀態
+        _HP = MaxHP;
+        ChangeState(State.Idle);
+
+        // 3. 關閉控制器 -> 瞬移回出生的原點 -> 重新開啟控制器
+        charCtrl.enabled = false;
+        transform.position = _initialSpawnPos;
+        transform.rotation = _initialSpawnRot;
+        charCtrl.enabled = true;
+
+        // 4. 播放復活特效
+        if (_respawnVFX != null)
+        {
+            Instantiate(_respawnVFX, transform.position, transform.rotation);
+        }
+
+        // 5. 更新 UI 血條
+        GameManager.UpdatePlayerHPBar(CurrentHP, MaxHP);
+    }
+    #endregion
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: "\u6280\u80FD3"
   aniTriggerName: Skill03
-  skillPrefab: {fileID: 1241401826128498808, guid: 202c38d8b86a7f9429461392df9b0607, type: 3}
+  skillPrefab: {fileID: 1241401826128498808, guid: 2689408857d24404a91c6d41350a1cad, type: 3}
   minRange: 0
   maxRange: 15
   cooldown: 10

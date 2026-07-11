@@ -107,12 +107,29 @@ public class SkillCtrl : MonoBehaviour
     /// 是否延遲觸發二段打
     /// </summary>
     private bool DelaySecondHit => _secondHitDelay > 0f;
+
+    [Header("技能音效")] // 【新增】
+    [SerializeField]
+    private AudioClip _launchSound; // 【新增】發射/飛行的聲音 (沒打中時只會聽到這個)
+    [SerializeField]
+    private AudioClip _hitSound; // 命中時的音效
+    private AudioSource _localAudioSource; // 本地的音源元件
     #endregion 運作方式
 
     #region 生命週期
     void Start()
     {
+        _localAudioSource = GetComponent<AudioSource>();
+
+        // 1. 遊戲開始播放發射/飛行音效
+        if (_localAudioSource != null && _launchSound != null)
+        {
+            _localAudioSource.clip = _launchSound;
+            _localAudioSource.playOnAwake = false; // 透過腳本精準控制
+            _localAudioSource.Play();
+        }
         Destroy(gameObject, _destroyTime);
+
     }
 
     private void Update()
@@ -137,6 +154,17 @@ public class SkillCtrl : MonoBehaviour
 
             if(_hitEffectObj) _hitEffectObj?.SetActive(true);
             if (HitShock) impulseSource.GenerateImpulseWithForce(_hitPower);
+            // 【新增】播放命中音效
+            if (_hitSound != null && _localAudioSource != null)
+            {
+                // 先停止原本飛行的聲音 (如果有需要的話)
+                _localAudioSource.Stop();
+                // 使用 PlayClipAtPoint 是最安全的，因為技能本身可能隨後會被 Destroy
+                // 這樣聲音會在命中座標點產生一個獨立的臨時音源，播完自動銷毀
+                _localAudioSource.PlayOneShot(_hitSound);
+                // 3. 如果你的技能會立即 Destroy，請將 Destroy 延後 0.2 秒讓聲音播完
+                // CancelInvoke("DestroySelf"); // 假設你有自定義銷毀
+            }
         }
     }
 

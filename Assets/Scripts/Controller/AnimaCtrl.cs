@@ -72,7 +72,12 @@ public class AnimaCtrl : MonoBehaviour
     public void OnAttack(int index) 
     {
         if (_eventPoints.Length <= 0) return;
-        baseCtrl?.OnAttack(_eventPoints[index]);
+
+        // 防呆：如果傳進來的 index 大於發射點的數量，就預設用第0個
+        int pointIndex = index < _eventPoints.Length ? index : 0;
+        // 【修改】將 index 同時傳給 BaseCtrl，讓它知道該生成哪一招
+        baseCtrl?.OnAttack(_eventPoints[pointIndex], index); 
+
     }
 
     public void EndAttack()

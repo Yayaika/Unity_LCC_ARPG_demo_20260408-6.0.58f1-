@@ -16,7 +16,7 @@ MonoBehaviour:
   aniTriggerName: Skill01
   skillPrefab: {fileID: 1241401826128498808, guid: 36a11678409dac5409d2d55ac8328234, type: 3}
   minRange: 0
-  maxRange: 10
+  maxRange: 5
   cooldown: 5
   weight: 5
   allowedPhases: -1

@@ -339,11 +339,20 @@ public abstract class BaseCtrl : MonoBehaviour
         }
     }
 
-
+    // 原始版本：給小怪用
     public virtual void OnAttack(Transform point)
     {
         if (_skillPrefabs == null || _skillPrefabs.Length == 0) return;
         Instantiate(_skillPrefabs[0], point.position, point.rotation);
+    }
+
+    // 擴充版本：給玩家左右手用
+    public virtual void OnAttack(Transform point, int index)
+    {
+        if (_skillPrefabs == null || _skillPrefabs.Length == 0) return;
+        // 如果傳入 index，就根據 index 選 Prefab
+        int skillIndex = index < _skillPrefabs.Length ? index : 0;
+        Instantiate(_skillPrefabs[skillIndex], point.position, point.rotation);
     }
     #endregion 動畫控制取用
 }
