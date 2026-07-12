@@ -51,5 +51,11 @@ public class UIBossInfoCtrl : UIPanelCtrl
             Switch(true);
             _isReady = true;
         }
+        // 【新增邏輯】：如果血量歸零或小於等於零，關閉 UI
+        if (_HP <= 0)
+        {
+            Switch(false);
+            _isReady = false; // 重置狀態，以便下次進入房間能再次顯示
+        }
     }
 }

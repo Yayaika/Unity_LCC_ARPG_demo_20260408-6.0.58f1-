@@ -87,6 +87,7 @@ MonoBehaviour:
   _useTargetPos: 1
   _hitPower: 0.1
   _flySpeed: 2
+  _launchSound: {fileID: 8300000, guid: 94bc8546fe222904c9fd6e0438c1b6fc, type: 3}
   _hitSound: {fileID: 8300000, guid: 8c9454f440a5d4147ac39c04e5a82204, type: 3}
 --- !u!114 &455461811122467592
 MonoBehaviour:
@@ -152,7 +153,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 8c9454f440a5d4147ac39c04e5a82204, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

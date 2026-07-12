@@ -16,6 +16,11 @@ public class PlayerCtrl : BaseCtrl
     private float _dashSpeed = 16f;
     private float _dashDuration = 0.2f;
 
+    [Header("玩家動作音效")]
+    [SerializeField] private AudioClip _jumpSound;    // 跳躍聲
+    [SerializeField] private AudioClip _dashSound;    // 衝刺聲
+    [SerializeField] private AudioClip _respawnSound; // 復活聲
+
     #endregion 基礎参数
 
     #region 公用参数
@@ -56,7 +61,7 @@ public class PlayerCtrl : BaseCtrl
     // 【新增】自動記錄的出生點座標與旋轉，不需要在 Inspector 拖曳！
     private Vector3 _initialSpawnPos;
     private Quaternion _initialSpawnRot;
-    #endregion
+    #endregion 復活參數
 
     #region 生命周期
     // 【新增這整個 Awake 方法】
@@ -136,15 +141,17 @@ public class PlayerCtrl : BaseCtrl
         if (IsDead) return;
         if (state == State.Attack || state == State.Dash) return;
 
-        if (IsGrounded)
+        if (IsGrounded || CanAirJump)
         {
-            JumpHandle();
-        }
-        else if (CanAirJump)
-        {
-            _airJumpCount--;
-            _jumpPower = 0.5f;
-            JumpHandle();
+            // 【新增】播放跳躍音效
+            if (_audioSource && _jumpSound) _audioSource.PlayOneShot(_jumpSound);
+            if (IsGrounded) JumpHandle();
+            else
+            {
+                _airJumpCount--;
+                _jumpPower = 0.5f;
+                JumpHandle();
+            }
         }
     }
 
@@ -187,6 +194,9 @@ public class PlayerCtrl : BaseCtrl
 
     private async Task DashHandle()
     {
+        // 【新增】播放衝刺音效
+        if (_audioSource && _dashSound) _audioSource.PlayOneShot(_dashSound);
+
         charCtrl.transform.rotation = Quaternion.LookRotation(transform.forward);
         _velocity = transform.forward * _dashSpeed;
         _velocity.y = 0;
@@ -222,6 +232,8 @@ public class PlayerCtrl : BaseCtrl
         transform.position = _initialSpawnPos;
         transform.rotation = _initialSpawnRot;
         charCtrl.enabled = true;
+        // 【新增】播放復活音效
+        if (_audioSource && _respawnSound) _audioSource.PlayOneShot(_respawnSound);
 
         // 4. 播放復活特效
         if (_respawnVFX != null)

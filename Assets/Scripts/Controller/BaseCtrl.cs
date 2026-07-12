@@ -93,6 +93,20 @@ public abstract class BaseCtrl : MonoBehaviour
     protected GameObject[] _skillPrefabs;
     #endregion 基本參數
 
+    #region 音效元件
+    [Header("基礎音效元件")]
+    /// <summary>
+    /// 負責播放此角色音效的元件
+    /// </summary>
+    [SerializeField]
+    protected AudioSource _audioSource;
+
+    [SerializeField]
+    protected AudioClip _hitSound;  // 受擊通用音效
+    [SerializeField]
+    protected AudioClip _deadSound; // 死亡通用音效
+    #endregion 音效元件
+
     #region 角色屬性參數
     /// <summary>
     /// 最大生命值
@@ -179,12 +193,24 @@ public abstract class BaseCtrl : MonoBehaviour
             if (_combo > 2) _combo = 1;
         }
     }
+    public event Action OnDied; // 【新增】死亡事件
     #endregion 抽象公用屬性參數
 
     #region 生命週期
     protected virtual void Awake()
     {
         _HP = _maxHP;//登場回滿血(初始化)
+
+        // 【新增】如果沒在 Inspector 指定，就嘗試從物件本身抓取 AudioSource
+        if (_audioSource == null)
+            _audioSource = GetComponent<AudioSource>();
+
+        // 如果連物件本身都沒有 AudioSource，就自動幫它加一個
+        if (_audioSource == null)
+            _audioSource = gameObject.AddComponent<AudioSource>();
+
+        // 建議預設關閉 Play On Awake，避免生成時發出雜音
+        _audioSource.playOnAwake = false;
     }
 
     /// <summary>
@@ -311,6 +337,7 @@ public abstract class BaseCtrl : MonoBehaviour
         //_velocity = Vector3.zero;
         //charCtrl.enabled = false;
         animaCtrl.SetTrigger(AniHash.DeadTrigger);
+        OnDied?.Invoke(); // 【新增】觸發死亡通知
     }
 
     public void EndHit()
@@ -354,5 +381,8 @@ public abstract class BaseCtrl : MonoBehaviour
         int skillIndex = index < _skillPrefabs.Length ? index : 0;
         Instantiate(_skillPrefabs[skillIndex], point.position, point.rotation);
     }
+
+
+
     #endregion 動畫控制取用
 }
