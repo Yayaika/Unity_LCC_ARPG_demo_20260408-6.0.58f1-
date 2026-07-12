@@ -57,7 +57,24 @@ public class AnimaCtrl : MonoBehaviour
     /// </summary>
     /// <param name="name">名稱</param>
     /// <param name="val">值</param>
-    public void SetFloat(int hash, float val) => animator.SetFloat(hash, val);
+    public void SetFloat(int hash, float val)
+    {
+        // 檢查該參數是否存在於 Animator 中
+        // 注意：這會消耗一點點效能，但在開發階段非常有用
+        if (HasParameter(hash))
+        {
+            animator.SetFloat(hash, val);
+        }
+    }
+    // 新增一個檢查參數是否存在的方法
+    private bool HasParameter(int hash)
+    {
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.nameHash == hash) return true;
+        }
+        return false;
+    }
 
     /// <summary>
     /// 設置動畫整數

@@ -145,6 +145,13 @@ public class SkillCtrl : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
+        // 0. 安全機制：排除發射者自己或同陣營 (例如 Enemy 射出的子彈不打 Enemy)
+        // 如果目前目標是 Enemy，那發射者就是 Player，所以要排除 Player 標籤，反之亦然
+        string myOwnTag = (target == Target.Enemy) ? "Player" : "Enemy";
+        if (other.CompareTag(myOwnTag) || other.CompareTag("Untagged") && other.name.Contains("Trigger"))
+            return; // 遇到自己的陣營或是某些純觸發區域(如 BossZone)就穿透過去
+
+        // 1. 狀況 A：精準打中設定的「敵人/目標」標籤
         if (other.CompareTag(Tag))
         {
             BaseCtrl actor = other.GetComponent<BaseCtrl>();
@@ -155,17 +162,42 @@ public class SkillCtrl : MonoBehaviour
             if(_hitEffectObj) _hitEffectObj?.SetActive(true);
             if (HitShock) impulseSource.GenerateImpulseWithForce(_hitPower);
             // 【新增】播放命中音效
-            if (_hitSound != null && _localAudioSource != null)
-            {
-                // 先停止原本飛行的聲音 (如果有需要的話)
-                _localAudioSource.Stop();
-                // 使用 PlayClipAtPoint 是最安全的，因為技能本身可能隨後會被 Destroy
-                // 這樣聲音會在命中座標點產生一個獨立的臨時音源，播完自動銷毀
-                _localAudioSource.PlayOneShot(_hitSound);
-                // 3. 如果你的技能會立即 Destroy，請將 Destroy 延後 0.2 秒讓聲音播完
-                // CancelInvoke("DestroySelf"); // 假設你有自定義銷毀
-            }
+            PlayHitSoundAndDestroy();
+            return;
         }
+        // 2. 狀況 B：打到了「非目標」的東西 (例如 Terrain、環境障礙物、牆壁等)
+        // 只要不是發射者陣營，撞到任何有物理碰撞的東西就立刻阻擋並消失
+        Debug.Log($"[Skill] 技能撞擊到非目標物體: {other.name}，觸發提前銷毀。");
+
+        // 如果打到環境也想生出爆炸特效，可以取消下面這行的註解：
+        // if (_hitEffectObj) { _hitEffectObj.transform.position = transform.position; _hitEffectObj.SetActive(true); }
+
+        PlayHitSoundAndDestroy();
+    }
+
+    /// <summary>
+    /// 播放命中音效並確保安全銷毀物件
+    /// </summary>
+    private void PlayHitSoundAndDestroy()
+    {
+        if (_hitSound != null && _localAudioSource != null)
+        {
+            _localAudioSource.Stop();
+            _localAudioSource.PlayOneShot(_hitSound);
+        }
+
+        // 關閉 MeshRenderer 與 Collider，讓子彈隱形且失去碰撞，但保留 GameObject 讓音效播完
+        var renderer = GetComponentInChildren<MeshRenderer>();
+        if (renderer) renderer.enabled = false;
+
+        var collider = GetComponent<Collider>();
+        if (collider) collider.enabled = false;
+
+        // 停止飛行
+        _flySpeed = 0f;
+
+        // 0.2 秒後徹底銷毀，留時間給 PlayOneShot 播完殘響
+        Destroy(gameObject, 0.2f);
     }
 
     #region 運行手段
@@ -196,4 +228,6 @@ public class SkillCtrl : MonoBehaviour
         Instantiate(_secondHitObj, hitTraget.position, Quaternion.identity);
     }
     #endregion 運行手段
+
+
 }

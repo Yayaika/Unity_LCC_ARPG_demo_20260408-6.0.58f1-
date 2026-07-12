@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 2
-  _damage: 10
+  _damage: 15
   _hitEffectObj: {fileID: 0}
   _secondHitObj: {fileID: 0}
   _secondHitDelay: 0

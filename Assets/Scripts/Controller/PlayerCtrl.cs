@@ -15,6 +15,9 @@ public class PlayerCtrl : BaseCtrl
     [SerializeField]
     private float _dashSpeed = 16f;
     private float _dashDuration = 0.2f;
+    [SerializeField]
+    private int _dashCountMax = 1; // 衝刺最大次數 (在 Inspector 設定)
+    private int _dashCount;        // 當前剩餘衝刺次數
 
     [Header("玩家動作音效")]
     [SerializeField] private AudioClip _jumpSound;    // 跳躍聲
@@ -125,7 +128,11 @@ public class PlayerCtrl : BaseCtrl
     protected override void Gravity()
     {
         base.Gravity();
-        if (IsGrounded) _airJumpCount = _airJumpCountMax;
+        if (IsGrounded)
+        {
+            _airJumpCount = _airJumpCountMax;
+            _dashCount = _dashCountMax; // 【新增】觸地時重置衝刺次數
+        }
     }
 
     #endregion 角色物理控制
@@ -143,6 +150,8 @@ public class PlayerCtrl : BaseCtrl
 
         if (IsGrounded || CanAirJump)
         {
+            // --- 【新增邏輯】只要有跳躍動作，就恢復衝刺次數 ---
+            _dashCount = _dashCountMax;
             // 【新增】播放跳躍音效
             if (_audioSource && _jumpSound) _audioSource.PlayOneShot(_jumpSound);
             if (IsGrounded) JumpHandle();
@@ -183,26 +192,74 @@ public class PlayerCtrl : BaseCtrl
 
     private void Dash(InputAction.CallbackContext context)
     {
-        // 【新增修正】如果已經死亡，直接無視衝刺請求
+        // 輸出當前所有狀態，這樣您在 Console 就能直接看懂為何無法衝刺
+        Debug.Log($"[Dash Debug] 狀態: {state} | 無限衝刺: {SettingsManager.Instance.InfiniteDash} | 剩餘次數: {_dashCount}");
+
         if (IsDead) return;
-        if (state == State.Attack || state == State.Dash) return;
+
+        // 檢查狀態是否卡在攻擊中
+        if (state == State.Attack)
+        {
+            Debug.Log("衝刺失敗：正在攻擊中");
+            return;
+        }
+
+        if (state == State.Dash)
+        {
+            Debug.Log("衝刺失敗：已經在衝刺了");
+            return;
+        }
+
+        // 核心判斷：如果不開無限衝刺 且 次數用完，才禁止
+        if (!SettingsManager.Instance.InfiniteDash && _dashCount <= 0)
+        {
+            Debug.Log("衝刺失敗：沒次數了，且未開啟無限衝刺");
+            return;
+        }
+
+        // 執行衝刺前扣除次數 (如果是無限模式則不扣)
+        if (!SettingsManager.Instance.InfiniteDash)
+        {
+            _dashCount--;
+            Debug.Log($"衝刺成功，剩餘次數: {_dashCount}");
+        }
+        else
+        {
+            Debug.Log("衝刺成功 (無限模式)");
+        }
+
         ChangeState(State.Dash);
         animaCtrl.SetTrigger(AniHash.DashTrigger);
-
         _ = DashHandle();
     }
 
     private async Task DashHandle()
     {
-        // 【新增】播放衝刺音效
+        // 1. 播放衝刺音效
         if (_audioSource && _dashSound) _audioSource.PlayOneShot(_dashSound);
 
-        charCtrl.transform.rotation = Quaternion.LookRotation(transform.forward);
+        // 2. 獲取 CharacterController (這是 Unity 內建組件)
+        var controller = GetComponent<CharacterController>();
+        if (controller == null) return;
+
+        // 3. 設定初始速度
+        transform.rotation = Quaternion.LookRotation(transform.forward);
         _velocity = transform.forward * _dashSpeed;
         _velocity.y = 0;
-        // 推進
-        await Task.Delay(TimeSpan.FromSeconds(_dashDuration));
 
+        // 4. 等待時間 (增加 try-catch 以捕捉潛在崩潰)
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(_dashDuration));
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("衝刺延遲中斷: " + e.Message);
+            return;
+        }
+
+        // 5. 【關鍵修改】：檢查狀態是否還是 Dash，如果是才歸零並切換
+        // 如果期間變成了 Dead 或其他狀態，則不執行這段歸零動作
         if (state == State.Dash)
         {
             _velocity = Vector3.zero;
@@ -240,9 +297,19 @@ public class PlayerCtrl : BaseCtrl
         {
             Instantiate(_respawnVFX, transform.position, transform.rotation);
         }
-
         // 5. 更新 UI 血條
         GameManager.UpdatePlayerHPBar(CurrentHP, MaxHP);
     }
+    public override void TakeDamage(float damage)
+    {
+        // 直接訪問 SettingsManager 檢查狀態
+        if (SettingsManager.Instance.GodMode)
+        {
+            Debug.Log("無敵模式開啟，無視傷害");
+            return;
+        }
+        base.TakeDamage(damage);
+    }
+
     #endregion
 }

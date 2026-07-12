@@ -115,6 +115,7 @@ MonoBehaviour:
   _breakDef: 0
   _airJumpCountMax: 1
   _dashSpeed: 18
+  _dashCountMax: 2
   _jumpSound: {fileID: 8300000, guid: 0bb624ebf71364282a8bf9a2b51c8021, type: 3}
   _dashSound: {fileID: 8300000, guid: 61d406b7e73d543828ae22723594d428, type: 3}
   _respawnSound: {fileID: 8300000, guid: 89819cb2b454a48c2a327329bb8042f5, type: 3}

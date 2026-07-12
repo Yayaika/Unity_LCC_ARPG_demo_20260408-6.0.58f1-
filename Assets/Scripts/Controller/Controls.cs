@@ -102,6 +102,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""ToggleMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e2dfabb-c742-49ae-b866-2b23730f69d8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""ea84c32d-2d38-4848-822a-d8d43fbc7f75"",
@@ -389,6 +398,28 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9fe43a09-3aab-4e8c-aeab-24c2d85c56b8"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fda341cc-c053-4647-a024-246cbddcf874"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -426,6 +457,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         // Play
         m_Play = asset.FindActionMap("Play", throwIfNotFound: true);
         m_Play_Move = m_Play.FindAction("Move", throwIfNotFound: true);
+        m_Play_ToggleMenu = m_Play.FindAction("ToggleMenu", throwIfNotFound: true);
         m_Play_Jump = m_Play.FindAction("Jump", throwIfNotFound: true);
         m_Play_Menu = m_Play.FindAction("Menu", throwIfNotFound: true);
         m_Play_Attack = m_Play.FindAction("Attack", throwIfNotFound: true);
@@ -516,6 +548,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Play;
     private List<IPlayActions> m_PlayActionsCallbackInterfaces = new List<IPlayActions>();
     private readonly InputAction m_Play_Move;
+    private readonly InputAction m_Play_ToggleMenu;
     private readonly InputAction m_Play_Jump;
     private readonly InputAction m_Play_Menu;
     private readonly InputAction m_Play_Attack;
@@ -536,6 +569,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Play/Move".
         /// </summary>
         public InputAction @Move => m_Wrapper.m_Play_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "Play/ToggleMenu".
+        /// </summary>
+        public InputAction @ToggleMenu => m_Wrapper.m_Play_ToggleMenu;
         /// <summary>
         /// Provides access to the underlying input action "Play/Jump".
         /// </summary>
@@ -585,6 +622,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @ToggleMenu.started += instance.OnToggleMenu;
+            @ToggleMenu.performed += instance.OnToggleMenu;
+            @ToggleMenu.canceled += instance.OnToggleMenu;
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
@@ -614,6 +654,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @ToggleMenu.started -= instance.OnToggleMenu;
+            @ToggleMenu.performed -= instance.OnToggleMenu;
+            @ToggleMenu.canceled -= instance.OnToggleMenu;
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
@@ -772,6 +815,13 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleMenu(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

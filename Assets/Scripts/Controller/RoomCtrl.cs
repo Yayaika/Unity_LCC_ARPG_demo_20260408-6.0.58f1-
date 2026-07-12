@@ -112,10 +112,15 @@ public class RoomCtrl : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (_isBattleActive && !bossCtrl.IsDead) return;
+        //if (_isBattleActive && !bossCtrl.IsDead) return;
         if (other.CompareTag(Tag))
         {
-            cinemachineCamera.Priority.Value = 0;
+            Debug.Log("[RoomCtrl] 玩家離開 Boss 區域，關閉鏡頭權重並重置房間狀態。");
+            // 1. 強制降低 Boss 鏡頭權重，讓視角平滑回歸玩家
+            if (cinemachineCamera != null) cinemachineCamera.Priority.Value = 0;
+
+            // 2. 既然玩家已經在場景外了，直接重置戰鬥狀態與空氣牆，防止狀態鎖死
+            ResetRoomStatus();
         }
     }
 
@@ -147,8 +152,11 @@ public class RoomCtrl : MonoBehaviour
 
         if (magicDoor != null) magicDoor.SetActive(false);
         if (cinemachineCamera != null) cinemachineCamera.Priority.Value = 0;
-
-        if (_currentPlayer != null) _currentPlayer.OnDied -= OnPlayerDiedInRoom;
+        if (_currentPlayer != null)
+        {
+            _currentPlayer.OnDied -= OnPlayerDiedInRoom;
+            _currentPlayer = null; // 清空引用
+        }
     }
     #endregion
 }
