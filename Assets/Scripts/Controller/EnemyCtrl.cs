@@ -20,6 +20,10 @@ public class EnemyCtrl : BaseCtrl
     [SerializeField]
     private float _attackCD = 2f;
     private float _attackTimer;
+
+    [Header("掉落設定")]
+    [SerializeField] private GameObject _healStationPrefab; // 拖入你的 HealStation 預製體
+    [SerializeField][Range(0f, 1f)] private float _dropChance = 0.3f; // 掉落機率 (0.3 代表 30%)
     #endregion AI參數
 
     #region 公用參數
@@ -143,6 +147,51 @@ public class EnemyCtrl : BaseCtrl
     #endregion 生命週期(決策)
 
     #region 戰鬥行動
+    /// <summary>
+    /// 覆寫受傷邏輯，用來累計玩家造成的總傷害量
+    /// </summary>
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+
+        // 【數據累計】呼叫 GameManager 累計總傷害量
+        GameManager.AddDamage(damage);
+    }
+
+    /// <summary>
+    /// 覆寫或處理死亡邏輯
+    /// </summary>
+    protected override void Die()
+    {
+        base.Die();
+
+        // 1. 【數據累計】敵人死亡，擊殺數 +1
+        GameManager.AddKillCount();
+
+        // 2. 【掉落系統】觸發概率掉落補血道具
+        CalculateDrop();
+    }
+
+    /// <summary>
+    /// 計算隨機機率並生成掉落物
+    /// </summary>
+    private void CalculateDrop()
+    {
+        if (_healStationPrefab == null) return;
+
+        // 產生 0.0 到 1.0 之間的隨機浮點數
+        float randomValue = Random.value;
+
+        // 如果隨機值小於等於設定的掉落機率，則中獎
+        if (randomValue <= _dropChance)
+        {
+            // 於敵人當前位置生成回血木桶，Y軸往上提 0.2f 避免埋入地形中
+            Vector3 spawnPos = transform.position + Vector3.up * 0.2f;
+            Instantiate(_healStationPrefab, spawnPos, Quaternion.identity);
+            Debug.Log($"[掉落系統] 成功掉落物品！隨機值:{randomValue:F2} <= 機率:{_dropChance}");
+        }
+    }
+
     protected virtual void Attack()
     {
         if (CanAttack)

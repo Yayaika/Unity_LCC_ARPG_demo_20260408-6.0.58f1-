@@ -118,6 +118,8 @@ public class PlayerCtrl : BaseCtrl
         animaCtrl.SetFloat(AniHash.VelocityY, VelocityY);
         animaCtrl.SetInteger(AniHash.Combo, Combo);
 
+        // 【手動修改】將字串 "DashBlend" 改為 Hash 變數 AniHash.DashBlend
+        animaCtrl.SetFloat(AniHash.DashBlend, IsGrounded ? 0f : 1f);
     }
     #endregion 生命周期
 
@@ -153,7 +155,12 @@ public class PlayerCtrl : BaseCtrl
             // --- 【新增邏輯】只要有跳躍動作，就恢復衝刺次數 ---
             _dashCount = _dashCountMax;
             // 【新增】播放跳躍音效
-            if (_audioSource && _jumpSound) _audioSource.PlayOneShot(_jumpSound);
+            // 原代碼：if (_audioSource && _jumpSound) _audioSource.PlayOneShot(_jumpSound);
+            // 修改為：
+            if (_jumpSound != null)
+            {
+                AudioSource.PlayClipAtPoint(_jumpSound, transform.position);
+            }
             if (IsGrounded) JumpHandle();
             else
             {
@@ -228,6 +235,9 @@ public class PlayerCtrl : BaseCtrl
             Debug.Log("衝刺成功 (無限模式)");
         }
 
+        // 【手動修改】將字串 "DashBlend" 改為 Hash 變數 AniHash.DashBlend
+        animaCtrl.SetFloat(AniHash.DashBlend, IsGrounded ? 0f : 1f);
+
         ChangeState(State.Dash);
         animaCtrl.SetTrigger(AniHash.DashTrigger);
         _ = DashHandle();
@@ -236,7 +246,12 @@ public class PlayerCtrl : BaseCtrl
     private async Task DashHandle()
     {
         // 1. 播放衝刺音效
-        if (_audioSource && _dashSound) _audioSource.PlayOneShot(_dashSound);
+        // 原代碼：if (_audioSource && _dashSound) _audioSource.PlayOneShot(_dashSound);
+        // 修改為：
+        if (_dashSound != null)
+        {
+            AudioSource.PlayClipAtPoint(_dashSound, transform.position);
+        }
 
         // 2. 獲取 CharacterController (這是 Unity 內建組件)
         var controller = GetComponent<CharacterController>();
@@ -272,6 +287,9 @@ public class PlayerCtrl : BaseCtrl
     protected override void Die()
     {
         base.Die(); // 先執行 BaseCtrl 的死亡邏輯 (切換Dead狀態、播死亡動畫、扣血)
+                    // 在這裡直接加上累計
+        //GameManager.AddDeathCount();
+        Debug.Log("[數據統計] 玩家觸發覆寫死亡，累計次數 +1");
         _ = RespawnHandle(); // 啟動非同步的復活程序
     }
 
@@ -290,7 +308,12 @@ public class PlayerCtrl : BaseCtrl
         transform.rotation = _initialSpawnRot;
         charCtrl.enabled = true;
         // 【新增】播放復活音效
-        if (_audioSource && _respawnSound) _audioSource.PlayOneShot(_respawnSound);
+        // 原代碼：if (_audioSource && _respawnSound) _audioSource.PlayOneShot(_respawnSound);
+        // 修改為：
+        if (_respawnSound != null)
+        {
+            AudioSource.PlayClipAtPoint(_respawnSound, transform.position);
+        }
 
         // 4. 播放復活特效
         if (_respawnVFX != null)

@@ -3,6 +3,7 @@ using TMPro;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UIPlayerSelectCtrl;
 using static UnityEditor.FilePathAttribute;
@@ -90,7 +91,13 @@ public class UIPlayerSelectCtrl : MonoBehaviour
             PlayerData data = _playerDB.GetPlayerData(i);
             charOptions[i].SetToggle(_playerDB.GetPlayerData(i).icon);
             //具象化物件(預製物，坐標，旋轉)
-            Instantiate(data.playerCtrl, charOptions[i].location.position, charOptions[i].location.rotation);
+            //Instantiate(data.playerCtrl, charOptions[i].location.position, charOptions[i].location.rotation);
+            // 【修改部分】：先接收生成出來的角色實例
+            PlayerCtrl spawnedPlayer = Instantiate(data.playerCtrl, charOptions[i].location.position, charOptions[i].location.rotation);
+            if (spawnedPlayer != null)
+            {
+                spawnedPlayer.enabled = false;
+            }
         }
         // 選中預設第一位角色
         UpdateInfo();
@@ -114,6 +121,10 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     {
         GameManager.playerIndex = index;
         GameManager.LoadScene("GamingUI");
+        // 2. 緊接著用「疊加模式 (Additive)」加載第一關的場景
+        // 備註：這行需要引用過 using UnityEngine.SceneManagement; 
+        // 如果你的 GameManager 內部已經有包裝好的 LoadSceneAsync，也可以寫在 GameManager 內部。
+        SceneManager.LoadScene("Stage01", LoadSceneMode.Additive);
     }
 
     /// <summary>

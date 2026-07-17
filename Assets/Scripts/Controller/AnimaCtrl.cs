@@ -128,6 +128,7 @@ public static class AniHash
     public static readonly int DeadTrigger = Animator.StringToHash("DeadTrigger");
     public static readonly int RoarTrigger = Animator.StringToHash("RoarTrigger");
 
+    public static readonly int DashBlend = Animator.StringToHash("DashBlend");
     public static readonly int VelocityY = Animator.StringToHash("VelocityY");
     public static readonly int MoveMulti = Animator.StringToHash("MoveMulti");
     public static readonly int Combo = Animator.StringToHash("Combo");

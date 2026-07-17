@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2920827658864013786}
   - component: {fileID: 7220784529445375135}
   - component: {fileID: -6498388836166354766}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SkeletonAttack
   m_TagString: Untagged
   m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
@@ -297,6 +297,10 @@ PrefabInstance:
     - target: {fileID: 6710139492206580332, guid: 95b8d3d65b5d7f1409c4ed1723887826, type: 3}
       propertyPath: m_Name
       value: CFXR4 Sword Trail PLAIN (360 Spiral)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6710139492206580332, guid: 95b8d3d65b5d7f1409c4ed1723887826, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6710139492206580334, guid: 95b8d3d65b5d7f1409c4ed1723887826, type: 3}
       propertyPath: InitialModule.startSize.scalar

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1241401826128498808}
   - component: {fileID: 455461811122467592}
   - component: {fileID: -4268442091257050552}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BossSkill01
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
@@ -247,9 +247,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5732120748277396856}
     m_Modifications:
+    - target: {fileID: 690304760250987042, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2090636658055693079, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2394897120462648622, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2670683172082904932, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3226506910322988314, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
       propertyPath: m_Name
       value: FX_Fireball
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226506910322988314, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3263346866027687831, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3370099500693623968, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
       propertyPath: m_LocalScale.x
@@ -306,6 +330,26 @@ PrefabInstance:
     - target: {fileID: 3370099500693623968, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4097120380296328060, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526709205347078141, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895871400750054955, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8342886888352328873, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8796436428182267632, guid: eccbc655050af0b4f81d8db39f84a58e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

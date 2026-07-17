@@ -1190,13 +1190,15 @@ MonoBehaviour:
   - {fileID: 27245915688278233, guid: 45257227d2fd62b49abc0a83ed6f5ea8, type: 3}
   _audioSource: {fileID: 0}
   _hitSound: {fileID: 0}
-  _deadSound: {fileID: 0}
+  _deadSound: {fileID: 8300000, guid: f2cea4ad5318749b09c3a483e56dde97, type: 3}
   _maxHP: 300
   _breakDef: 0
   _patrolRange: 1
   _chaseRange: 25
   _attackRange: 9
   _attackCD: 1.5
+  _healStationPrefab: {fileID: 1801483068796504124, guid: e92e10767d3ce1b418d0dab998992df0, type: 3}
+  _dropChance: 0.6
 --- !u!1 &2687049585295626642
 GameObject:
   m_ObjectHideFlags: 0

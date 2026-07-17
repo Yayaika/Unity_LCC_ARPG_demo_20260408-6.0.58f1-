@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 236323373683471799}
   - component: {fileID: 4512150855706283743}
   - component: {fileID: 6630511373068412951}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: A35 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4914,7 +4914,7 @@ GameObject:
   - component: {fileID: 2866905192406136138}
   - component: {fileID: 7634482152410215634}
   - component: {fileID: 8329396775843249018}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: slash_a (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9817,7 +9817,7 @@ GameObject:
   - component: {fileID: 6125647132293060136}
   - component: {fileID: 8309860367503569036}
   - component: {fileID: 6244315959751689528}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: eff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14724,7 +14724,7 @@ GameObject:
   - component: {fileID: 329185912932902206}
   - component: {fileID: 1978073756683627243}
   - component: {fileID: 7109560413162352034}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: slash_b (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19569,7 +19569,7 @@ GameObject:
   - component: {fileID: 708030938451885907}
   - component: {fileID: 6463138711364718593}
   - component: {fileID: 4492728054525057144}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: slash_a (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24474,7 +24474,7 @@ GameObject:
   - component: {fileID: 195063490293844628}
   - component: {fileID: 3270943120349838861}
   - component: {fileID: 5379653847160718190}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SlashrAttack 1
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -24539,6 +24539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 1
+  _damage: 10
   _hitEffectObj: {fileID: 0}
   _secondHitObj: {fileID: 9083106418724263595, guid: 8ddc4fbaa94b91d4983d6cea582df398, type: 3}
   _secondHitDelay: 0.15
@@ -24546,6 +24547,8 @@ MonoBehaviour:
   _useTargetPos: 0
   _hitPower: 0
   _flySpeed: 0
+  _launchSound: {fileID: 0}
+  _hitSound: {fileID: 0}
 --- !u!114 &5379653847160718190
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2197120295978040764}
   - component: {fileID: 3375467361657660132}
   - component: {fileID: 100106604354815072}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lensflare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4707,7 +4707,7 @@ GameObject:
   - component: {fileID: 4986198473159971199}
   - component: {fileID: 4208767801783841141}
   - component: {fileID: 1641054906632538480}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: twinkle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9403,7 +9403,7 @@ GameObject:
   - component: {fileID: 4156896812329449389}
   - component: {fileID: 3017657511082162884}
   - component: {fileID: 1891934181546666023}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lightline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14099,7 +14099,7 @@ GameObject:
   - component: {fileID: 2095846829630535696}
   - component: {fileID: 3035326595279920806}
   - component: {fileID: 5935562268967467276}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19011,7 +19011,7 @@ GameObject:
   - component: {fileID: 6590599443544372305}
   - component: {fileID: 1207030833987423434}
   - component: {fileID: 1387192966882347362}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23905,7 +23905,7 @@ GameObject:
   - component: {fileID: 5333914156314419126}
   - component: {fileID: 4091388947984165717}
   - component: {fileID: 6240391632755939242}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: floor_light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28799,7 +28799,7 @@ GameObject:
   - component: {fileID: 3712743660075455445}
   - component: {fileID: 9054642105345571084}
   - component: {fileID: 8135792592270098098}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: grad_lb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33702,7 +33702,7 @@ GameObject:
   - component: {fileID: 8143593840673121523}
   - component: {fileID: 2898938558925952207}
   - component: {fileID: 8773396015842129926}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38556,7 +38556,7 @@ GameObject:
   - component: {fileID: 195063490293844628}
   - component: {fileID: 3270943120349838861}
   - component: {fileID: 257051487126402968}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PowerEnemyAttack
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -38621,6 +38621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 2
+  _damage: 10
   _hitEffectObj: {fileID: 0}
   _secondHitObj: {fileID: 0}
   _secondHitDelay: 0
@@ -38628,6 +38629,8 @@ MonoBehaviour:
   _useTargetPos: 1
   _hitPower: 0.3
   _flySpeed: 0
+  _launchSound: {fileID: 0}
+  _hitSound: {fileID: 0}
 --- !u!114 &257051487126402968
 MonoBehaviour:
   m_ObjectHideFlags: 0

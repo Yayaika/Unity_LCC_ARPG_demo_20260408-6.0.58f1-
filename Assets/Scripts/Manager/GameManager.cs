@@ -100,8 +100,54 @@ public static class GameManager
     }
     #endregion Boss相關資訊
 
-    public static void LoadScene(string sceneName)
+    /// <summary>
+    /// 加載場景
+    /// </summary>
+    /// <param name="sceneName"></param>
+    /// <param name="mode"></param>
+    public static void LoadScene(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(sceneName, mode);
     }
+
+    #region 玩家統計數據系統（修正所有腳本報錯）
+
+    // 1. 儲存數據的靜態變數（唯讀，只能透過下方方法修改）
+    public static int KillCount { get; private set; } = 0;
+    public static float TotalDamageDealt { get; private set; } = 0f;
+    public static int DeathCount { get; private set; } = 0;
+
+    // 2. 當數據變動時，用來通知 UI 面板實時刷新的事件
+    public static System.Action OnStatsChanged;
+
+    /// <summary>
+    /// 累計擊殺數
+    /// </summary>
+    public static void AddKillCount()
+    {
+        KillCount++;
+        OnStatsChanged?.Invoke(); // 觸發事件，通知 UI 面板更新文字
+    }
+
+    /// <summary>
+    /// 累計玩家造成的總傷害
+    /// </summary>
+    /// <param name="damage">傳入受到的傷害值</param>
+    public static void AddDamage(float damage)
+    {
+        if (damage <= 0) return; // 負數（回血）或 0 傷害不計入統計
+        TotalDamageDealt += damage;
+        OnStatsChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// 累計玩家死亡次數
+    /// </summary>
+    public static void AddDeathCount()
+    {
+        DeathCount++;
+        OnStatsChanged?.Invoke();
+    }
+
+    #endregion
 }

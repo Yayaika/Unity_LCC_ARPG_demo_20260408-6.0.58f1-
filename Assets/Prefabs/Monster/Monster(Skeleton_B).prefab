@@ -1188,12 +1188,17 @@ MonoBehaviour:
   _jumpHeight: 2
   _skillPrefabs:
   - {fileID: 27245915688278233, guid: 1d3a2bb12151cb648a41389316ec39e6, type: 3}
+  _audioSource: {fileID: 0}
+  _hitSound: {fileID: 0}
+  _deadSound: {fileID: 8300000, guid: f2cea4ad5318749b09c3a483e56dde97, type: 3}
   _maxHP: 150
   _breakDef: 0
   _patrolRange: 1
   _chaseRange: 15
   _attackRange: 6
   _attackCD: 1.4
+  _healStationPrefab: {fileID: 1801483068796504124, guid: e92e10767d3ce1b418d0dab998992df0, type: 3}
+  _dropChance: 0.5
 --- !u!1 &2687049585295626642
 GameObject:
   m_ObjectHideFlags: 0

@@ -145,23 +145,22 @@ public class SkillCtrl : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        // 0. 安全機制：排除發射者自己或同陣營 (例如 Enemy 射出的子彈不打 Enemy)
-        // 如果目前目標是 Enemy，那發射者就是 Player，所以要排除 Player 標籤，反之亦然
+        // 0. 安全機制：排除發射者自己
         string myOwnTag = (target == Target.Enemy) ? "Player" : "Enemy";
-        if (other.CompareTag(myOwnTag) || other.CompareTag("Untagged") && other.name.Contains("Trigger"))
-            return; // 遇到自己的陣營或是某些純觸發區域(如 BossZone)就穿透過去
+        if (other.CompareTag(myOwnTag)) return;
 
-        // 1. 狀況 A：精準打中設定的「敵人/目標」標籤
+        // 1. 狀況 A：精準打中目標
         if (other.CompareTag(Tag))
         {
             BaseCtrl actor = other.GetComponent<BaseCtrl>();
             if (!actor) return;
+
             actor.TakeDamage(_damage);
             SceondHit(_useTargetPos ? other.transform : transform);
 
-            if(_hitEffectObj) _hitEffectObj?.SetActive(true);
+            if (_hitEffectObj) _hitEffectObj?.SetActive(true);
             if (HitShock) impulseSource.GenerateImpulseWithForce(_hitPower);
-            // 【新增】播放命中音效
+
             PlayHitSoundAndDestroy();
             return;
         }

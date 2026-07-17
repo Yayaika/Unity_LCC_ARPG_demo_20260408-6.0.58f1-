@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1035067787130155207}
   - component: {fileID: 8682721683104339682}
   - component: {fileID: 8554996519683618367}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: flare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4865,7 +4865,7 @@ GameObject:
   - component: {fileID: 7523699684556839833}
   - component: {fileID: 3705863965059731702}
   - component: {fileID: 6091855638129833107}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: Fragments
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9689,7 +9689,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1958561804229010742}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Active
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9724,7 +9724,7 @@ GameObject:
   - component: {fileID: 6793249711880556172}
   - component: {fileID: 1249213189588827936}
   - component: {fileID: 2639918675598721439}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: Ray
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14582,7 +14582,7 @@ GameObject:
   - component: {fileID: 2993495566022511085}
   - component: {fileID: 8312501440161368682}
   - component: {fileID: 7594349804668485740}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: glow (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19436,7 +19436,7 @@ GameObject:
   - component: {fileID: 8393301678574966222}
   - component: {fileID: 1852278750958413365}
   - component: {fileID: 6566824270475081739}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: flare (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24288,7 +24288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8248361346206091735}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24329,7 +24329,7 @@ GameObject:
   - component: {fileID: 1241401826128498808}
   - component: {fileID: 455461811122467592}
   - component: {fileID: -5798787846850382121}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: NormalAttack_L
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
@@ -24566,7 +24566,7 @@ GameObject:
   - component: {fileID: 5763908941434577183}
   - component: {fileID: 2423897463467516966}
   - component: {fileID: 389984572417025001}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29469,7 +29469,7 @@ GameObject:
   - component: {fileID: 1489394082254351632}
   - component: {fileID: 4740974167549397374}
   - component: {fileID: 193729076531610911}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: sheet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

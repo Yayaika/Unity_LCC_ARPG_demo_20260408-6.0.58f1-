@@ -301,19 +301,30 @@ public abstract class BaseCtrl : MonoBehaviour
         OnHPChanged?.Invoke(CurrentHP, MaxHP);
     }
     /// <summary>
-    /// 共通傷害執行接口
+    /// 共通傷害與治療執行接口
     /// </summary>
-    /// <param name="damage">傷害值</param>
+    /// <param name="damage">傷害值（正數為受傷，負數為回復）</param>
     public virtual void TakeDamage(float damage)
     {
-        if (IsDead) return;//避免鞭屍
-        _HP -= damage;
+        if (IsDead) return; // 避免鞭屍或死後回血
+
         if (damage > 0)
         {
+            // --- 正常受傷邏輯 ---
+            _HP -= damage;
             HitHandle(damage);
-            //有UI事件訂閱：執行數值傳遞
             OnHPChanged?.Invoke(CurrentHP, MaxHP);
         }
+        else if (damage < 0)
+        {
+            // --- 【核心新增】安全的治療邏輯：傳入負值代表扣除負值（等於加血） ---
+            // 使用 Mathf.Min 確保回血後的 _HP 絕對不會超過 _maxHP
+            _HP = Mathf.Min(_HP - damage, _maxHP);
+
+            // 治療成功也必須實時執行數值傳遞，讓 UI 血條同步刷新
+            OnHPChanged?.Invoke(CurrentHP, MaxHP);
+        }
+
         if (_HP <= 0) Die();
     }
     /// <summary>
@@ -325,6 +336,11 @@ public abstract class BaseCtrl : MonoBehaviour
         _velocity.x = 0;
         _velocity.z = 0;
         if (damage > _breakDef) animaCtrl.SetTrigger(AniHash.HitTrigger);
+        // 【新增】在 3D 空間中角色的位置播放受擊音效
+        if (_hitSound != null)
+        {
+            AudioSource.PlayClipAtPoint(_hitSound, transform.position);
+        }
     }
     /// <summary>
     /// 觸發死亡狀態與動畫
@@ -338,6 +354,19 @@ public abstract class BaseCtrl : MonoBehaviour
         //charCtrl.enabled = false;
         animaCtrl.SetTrigger(AniHash.DeadTrigger);
         OnDied?.Invoke(); // 【新增】觸發死亡通知
+                          // 【新增】在 3D 空間中角色的位置播放死亡音效
+        if (_deadSound != null)
+        {
+            AudioSource.PlayClipAtPoint(_deadSound, transform.position);
+        }
+
+        // ─── 【全新新增：安全埋點】 ───
+        // 判斷當前死掉的物件，是不是玩家自己
+        if (GameManager.playerCtrl != null && this.gameObject == GameManager.playerCtrl.gameObject)
+        {
+            GameManager.AddDeathCount(); // 累計玩家死亡次數
+            Debug.Log("[數據統計] 玩家死亡，累計次數 +1");
+        }
     }
 
     public void EndHit()
@@ -370,7 +399,18 @@ public abstract class BaseCtrl : MonoBehaviour
     public virtual void OnAttack(Transform point)
     {
         if (_skillPrefabs == null || _skillPrefabs.Length == 0) return;
-        Instantiate(_skillPrefabs[0], point.position, point.rotation);
+        // 1. 生成技能
+        GameObject skillObj = Instantiate(_skillPrefabs[0], point.position, point.rotation);
+
+        // 2. 獲取發射者與技能的 Collider
+        Collider myCol = GetComponent<Collider>();
+        Collider skillCol = skillObj.GetComponent<Collider>();
+
+        // 3. 如果兩者都有 Collider，則設定忽略碰撞
+        if (myCol != null && skillCol != null)
+        {
+            Physics.IgnoreCollision(myCol, skillCol);
+        }
     }
 
     // 擴充版本：給玩家左右手用
