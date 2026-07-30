@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 3554784578141254163}
   - component: {fileID: 1334252489531668320}
   - component: {fileID: 8608555863978343141}
+  - component: {fileID: 6355547717417860929}
   m_Layer: 3
   m_Name: Player(Guard_Male)
   m_TagString: Player
@@ -109,7 +110,7 @@ MonoBehaviour:
   - {fileID: 7857180437457266287, guid: 9fd5fa8b322e8704ebf396218fa783e4, type: 3}
   - {fileID: 7857180437457266287, guid: 758c7748280eecd4b8c19f2b41dd3a99, type: 3}
   _audioSource: {fileID: 7847516145602927913}
-  _hitSound: {fileID: 0}
+  _hitSound: {fileID: 8300000, guid: 876db8e809bce4c6a9011ef127be67c1, type: 3}
   _deadSound: {fileID: 8300000, guid: df19e5631d87a438a909e5f35867a687, type: 3}
   _maxHP: 100
   _breakDef: 0
@@ -121,6 +122,21 @@ MonoBehaviour:
   _respawnSound: {fileID: 8300000, guid: 89819cb2b454a48c2a327329bb8042f5, type: 3}
   _respawnVFX: {fileID: 7605971768039713050, guid: cd2a6771c578ec3478980c2e5a5f41ea, type: 3}
   _respawnDelay: 3
+--- !u!114 &6355547717417860929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923224442051310717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1f85961924a9144a6cdbcf92b1f753, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pushPower: 2
+  _horizontalOnly: 1
+  _onlyPushDynamic: 1
 --- !u!1 &1148117247159650174
 GameObject:
   m_ObjectHideFlags: 0

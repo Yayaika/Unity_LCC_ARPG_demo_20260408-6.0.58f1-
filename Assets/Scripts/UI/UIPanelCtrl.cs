@@ -32,6 +32,20 @@ public class UIPanelCtrl : MonoBehaviour
         canvasGroup.blocksRaycasts = B;
     }
 
+    /// <summary>
+    /// 供退出面板的「確定」按鈕呼叫
+    /// </summary>
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        // 如果是在 Unity 編輯器測試，點擊時停止播放模式
+        UnityEditor.EditorApplication.isPaused = true;
+#else
+        // 正式打包出來的遊戲，執行關閉程式
+        Application.Quit();
+#endif
+    }
+
     #region ContextMenu測試功能
     [ContextMenu("面板打開")]
     public void PanelOn()

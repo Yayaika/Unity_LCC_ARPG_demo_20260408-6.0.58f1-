@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+    path: Assets/Scenes/LoadCover.unity
+    guid: a884038c247fc824db53f564bb70e671
+  - enabled: 1
     path: Assets/Scenes/PlayerSetting.unity
     guid: db583b905aba9b04f879184cc4a98b34
   - enabled: 1
@@ -17,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stage01.unity
     guid: b693c1c79691ae841ba4d8b501223a36
+  - enabled: 1
+    path: Assets/Scenes/Stage02.unity
+    guid: 243b76b98a47e6349a806581936b6f7e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 5268f7f328718ba4ca03ad25dee5630d, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

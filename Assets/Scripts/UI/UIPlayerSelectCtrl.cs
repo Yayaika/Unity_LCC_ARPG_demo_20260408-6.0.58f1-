@@ -120,11 +120,14 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     public void EnterStage()
     {
         GameManager.playerIndex = index;
-        GameManager.LoadScene("GamingUI");
+        // 2. 指定遊戲世界的目標場景名稱
+        SceneChanger.LoadWithCover("GamingUI", "Stage01");
+
+        // 3. 疊加載入轉場黑幕
+        //SceneManager.LoadScene("LoadCover", LoadSceneMode.Additive);
         // 2. 緊接著用「疊加模式 (Additive)」加載第一關的場景
         // 備註：這行需要引用過 using UnityEngine.SceneManagement; 
         // 如果你的 GameManager 內部已經有包裝好的 LoadSceneAsync，也可以寫在 GameManager 內部。
-        SceneManager.LoadScene("Stage01", LoadSceneMode.Additive);
     }
 
     /// <summary>

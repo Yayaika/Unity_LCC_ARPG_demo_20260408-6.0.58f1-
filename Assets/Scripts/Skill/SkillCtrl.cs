@@ -149,6 +149,15 @@ public class SkillCtrl : MonoBehaviour
         string myOwnTag = (target == Target.Enemy) ? "Player" : "Enemy";
         if (other.CompareTag(myOwnTag)) return;
 
+        // =================【關鍵修復：過濾非目標的 Trigger】=================
+        // 如果撞到的碰撞器是 Trigger（例如：木桶的互動圈、怪物的偵測圈、傳送門等）
+        // 且這個物體的 Tag 不是我們的「攻擊目標（Tag）」，就直接忽略，讓子彈穿過去！
+        if (other.isTrigger && !other.CompareTag(Tag))
+        {
+            return;
+        }
+        // ===================================================================
+
         // 1. 狀況 A：精準打中目標
         if (other.CompareTag(Tag))
         {

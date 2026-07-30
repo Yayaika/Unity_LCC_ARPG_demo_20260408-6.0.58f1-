@@ -1197,8 +1197,11 @@ MonoBehaviour:
   _chaseRange: 25
   _attackRange: 9
   _attackCD: 1.5
-  _healStationPrefab: {fileID: 1801483068796504124, guid: e92e10767d3ce1b418d0dab998992df0, type: 3}
-  _dropChance: 0.6
+  _healStationPrefab: {fileID: 2423483215476932054, guid: c431690360cd0ff40b6bd8713ba13076, type: 3}
+  _dropChance: 0.9
+  _showHpBar: 1
+  _hpBarPrefab: {fileID: 8206319259576831775, guid: feb0f8f0beb358640b45a2cbbecc9c10, type: 3}
+  _hpBarOffset: {x: 0, y: 2, z: 0}
 --- !u!1 &2687049585295626642
 GameObject:
   m_ObjectHideFlags: 0

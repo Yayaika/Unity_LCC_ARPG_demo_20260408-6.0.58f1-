@@ -16,7 +16,10 @@ public class RoomCtrl : MonoBehaviour
     private PlayableDirector bossOutDirector; // 【新增】退場 Timeline (BossOut)
 
     [SerializeField]
-    private GameObject magicDoor; // 門口的空氣牆
+    private GameObject magicDoor; // 門口的空氣牆 (入口門)
+
+    [SerializeField]
+    private GameObject exitMagicDoor; // 【新增】Boss身後的出口空氣牆 (Cube (3))
 
     [SerializeField]
     private BossCtrl bossCtrl;
@@ -32,8 +35,12 @@ public class RoomCtrl : MonoBehaviour
 
     private const string Tag = "Player";
     private PlayerCtrl _currentPlayer; // 暫存進入房間的玩家
-    // 【關鍵修復】加入狀態鎖，防止重複觸發
+
+    // 狀態鎖，防止單次戰鬥中重複觸發
     private bool _isBattleActive = false;
+
+    // 【關鍵新增】紀錄這場遊戲中，是否已經播放過 Boss 的登場動畫
+    private bool _hasPlayedIntro = false;
 
     #region 生命週期與事件訂閱
     private void Start()
@@ -42,6 +49,12 @@ public class RoomCtrl : MonoBehaviour
         if (bossCtrl != null)
         {
             bossCtrl.OnDefeated += OnBossDefeated;
+        }
+
+        // 確保遊戲一開始出口空氣牆是擋住的 (SetActive(true))
+        if (exitMagicDoor != null)
+        {
+            exitMagicDoor.SetActive(true);
         }
     }
 
@@ -77,26 +90,50 @@ public class RoomCtrl : MonoBehaviour
                 _currentPlayer.OnDied += OnPlayerDiedInRoom;
             }
 
-            // 1. 播放進入房間的短音效
-            if (_bgmSource != null && _entranceSFX != null)
-            {
-                _bgmSource.PlayOneShot(_entranceSFX);
-            }
-
-            // 2. 播放進場動畫
-            director.Play();
-
+            // 進入房間時封鎖入口門與戰鬥區域
             if (magicDoor != null) magicDoor.SetActive(true);
             if (battleZone != null) battleZone.SetActive(true);
-            cinemachineCamera.Priority.Value = 100;
+            if (cinemachineCamera != null) cinemachineCamera.Priority.Value = 100;
 
-            // 3. 設定延遲：等動畫播完才開始放 Boss BGM
-            // director.duration 是 Timeline 的總長度
-            Invoke(nameof(StartBossBGM), (float)director.duration);
+            // 【邏輯分流】檢查是否已經播過登場動畫
+            if (!_hasPlayedIntro)
+            {
+                // --- 情況 A：第一次進入房間，播放完整登場動畫 ---
+                _hasPlayedIntro = true; // 標記為已播放過
 
-            _ = bossCtrl.Ready((float)director.duration);
+                // 1. 播放進入房間的短音效
+                if (_bgmSource != null && _entranceSFX != null)
+                {
+                    _bgmSource.PlayOneShot(_entranceSFX);
+                }
+
+                // 2. 播放進場動畫
+                if (director != null)
+                {
+                    director.Play();
+                    // 3. 設定延遲：等動畫播完才開始放 Boss BGM
+                    Invoke(nameof(StartBossBGM), (float)director.duration);
+                    _ = bossCtrl.Ready((float)director.duration);
+                }
+                else
+                {
+                    // 防呆：若沒拉 Timeline，直接開打
+                    StartBossBGM();
+                    _ = bossCtrl.Ready(0f);
+                }
+            }
+            else
+            {
+                // --- 情況 B：非第一次進入（例如死亡重跑），直接開打 ---
+                Debug.Log("[RoomCtrl] 檢測到玩家再次進入，跳過登場動畫直接開打。");
+
+                // 1. 直接播放 Boss 戰鬥 BGM
+                StartBossBGM();
+
+                // 2. 讓 Boss 讀取進入準備狀態（0 秒延遲）
+                _ = bossCtrl.Ready(0f);
+            }
         }
-    
     }
 
     // 動畫結束後正式開始播 BGM
@@ -112,25 +149,21 @@ public class RoomCtrl : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        //if (_isBattleActive && !bossCtrl.IsDead) return;
         if (other.CompareTag(Tag))
         {
             Debug.Log("[RoomCtrl] 玩家離開 Boss 區域，關閉鏡頭權重並重置房間狀態。");
-            // 1. 強制降低 Boss 鏡頭權重，讓視角平滑回歸玩家
             if (cinemachineCamera != null) cinemachineCamera.Priority.Value = 0;
 
-            // 2. 既然玩家已經在場景外了，直接重置戰鬥狀態與空氣牆，防止狀態鎖死
+            // 玩家離開時重置戰鬥狀態，但不會重置 _hasPlayedIntro
             ResetRoomStatus();
         }
     }
 
-    // 【新增】當玩家在房間內死掉時執行的重置邏輯
+    // 當玩家在房間內死掉時執行的重置邏輯
     private void OnPlayerDiedInRoom()
     {
         ResetRoomStatus();
     }
-
-    
 
     // 當 Boss 死亡時會自動執行的動作
     private void OnBossDefeated()
@@ -138,10 +171,12 @@ public class RoomCtrl : MonoBehaviour
         if (bossOutDirector != null) bossOutDirector.Play();
         ResetRoomStatus();
         if (battleZone != null) battleZone.SetActive(false);
+
+        // 【關鍵】只有 Boss 死亡時，才關閉出口空氣牆 (Cube (3)) 讓玩家通過
+        if (exitMagicDoor != null) exitMagicDoor.SetActive(false);
     }
 
-    // 通用的音樂播放函式
-    // 統一停止音樂與重置相機/門的方法
+    // 統一停止音樂與重置相機/門的方法（此處刻意不重置 _hasPlayedIntro）
     private void ResetRoomStatus()
     {
         _isBattleActive = false;
@@ -150,6 +185,7 @@ public class RoomCtrl : MonoBehaviour
         // 停止所有音樂播放
         if (_bgmSource != null) _bgmSource.Stop();
 
+        // 玩家死亡或離開時，將入口門 (magicDoor) 打開
         if (magicDoor != null) magicDoor.SetActive(false);
         if (cinemachineCamera != null) cinemachineCamera.Priority.Value = 0;
         if (_currentPlayer != null)

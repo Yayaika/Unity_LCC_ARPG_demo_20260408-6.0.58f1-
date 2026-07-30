@@ -73,15 +73,16 @@ public class UISettingPanel : UIPanelCtrl
     }
 
     /// <summary>
-    /// 點擊按鈕切換至 PlayerSetting 場景的方法
+    /// 點擊按鈕切換至 PlayerSetting 場景的方法 (已加入黑屏轉場)
     /// </summary>
     public void OnPlayerSettingClicked()
     {
-        // 1. 如果您的設定面板打開時會暫停遊戲（Time.timeScale = 0），建議在切換場景前將時間流速恢復正常
+        // 1. 如果您的設定面板打開時會暫停遊戲（Time.timeScale = 0），切換場景前必須先將時間流速恢復正常
+        //    這樣黑屏 Fade 淡入協程 (Time.deltaTime) 才跑得了！
         Time.timeScale = 1f;
 
-        // 2. 載入目標場景
-        SceneManager.LoadScene("PlayerSetting");
+        // 2. 呼叫 SceneChanger 的黑屏轉場 (Single 模式載入 "PlayerSetting"，並自動清空 GamingUI 與 遊戲世界)
+        SceneChanger.LoadWithCover("PlayerSetting");
     }
 
     // 關閉與退出邏輯

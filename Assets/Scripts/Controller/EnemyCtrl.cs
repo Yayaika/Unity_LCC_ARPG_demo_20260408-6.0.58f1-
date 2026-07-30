@@ -24,6 +24,17 @@ public class EnemyCtrl : BaseCtrl
     [Header("掉落設定")]
     [SerializeField] private GameObject _healStationPrefab; // 拖入你的 HealStation 預製體
     [SerializeField][Range(0f, 1f)] private float _dropChance = 0.3f; // 掉落機率 (0.3 代表 30%)
+
+    [Header("頭頂血條設定")]
+    [Tooltip("是否啟用頭頂血條功能")]
+    [SerializeField] private bool _showHpBar = true;
+
+    [Tooltip("請拖入掛載了 EnemyHPBar 腳本的 3D 文字血條預製物")]
+    [SerializeField] private GameObject _hpBarPrefab;
+    [Tooltip("血條浮在小怪頭頂的高度偏移量")]
+    [SerializeField] private Vector3 _hpBarOffset = new Vector3(0, 1.5f, 0);
+
+    private EnemyHPBar _enemyHPBar; // 儲存動態生成出來的血條 UI 實例
     #endregion AI參數
 
     #region 公用參數
@@ -86,9 +97,36 @@ public class EnemyCtrl : BaseCtrl
 
     #region 生命週期(決策)
     private void Start()
-    {//紀錄出生座標 & 巡邏原點
+    {   // 紀錄出生座標 & 巡邏原點
         _spawnPos = transform.position;
         _patrolPos = transform.position;
+
+        // 【優化：Start 時完全不生成任何血條物件】
+        // 我們只訂閱 HP 改變事件，當怪獸在遠處受傷時，數值依然能在後台正常更新
+        if (_showHpBar)
+        {
+            OnHPChanged += OnEnemyHPChanged;
+        }
+    }
+
+    private void OnEnemyHPChanged(float currentHP, float maxHP)
+    {
+        // 只有在血條目前被「動態加載出來」時，才需要更新數值
+        if (_enemyHPBar != null)
+        {
+            _enemyHPBar.UpdateHP(currentHP, maxHP);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_showHpBar)
+        {
+            OnHPChanged -= OnEnemyHPChanged;
+        }
+
+        // 安全防呆：如果怪物被意外銷毀，一併清理頭頂血條
+        DestroyHPBar();
     }
 
     protected override void Update()
@@ -96,7 +134,15 @@ public class EnemyCtrl : BaseCtrl
         AttackCoolDown();
         AIDecision();
         base.Update();
+
+        // =================【全新優化：動態加載管理】=================
+        if (_showHpBar)
+        {
+            ManageHPBarLoadState();
+        }
+        // =========================================================
     }
+
     /// <summary>
     /// 攻擊冷卻
     /// </summary>
@@ -170,6 +216,9 @@ public class EnemyCtrl : BaseCtrl
 
         // 2. 【掉落系統】觸發概率掉落補血道具
         CalculateDrop();
+
+        // 3. 【優化】小怪死亡，立刻銷毀頭頂血條
+        DestroyHPBar();
     }
 
     /// <summary>
@@ -207,4 +256,97 @@ public class EnemyCtrl : BaseCtrl
     }
 
     #endregion 戰鬥行動
+
+    #region =================【全新優化：動態加載核心方法】=================
+    /// <summary>
+    /// 控制血條何時從 Canvas 中生成與銷毀
+    /// </summary>
+    private void ManageHPBarLoadState()
+    {
+        // 判定條件：只有當玩家進入「追擊圈內（仇恨範圍）」且怪物沒死時，才需要血條
+        bool shouldLoad = InChaseRange && !IsDead;
+
+        if (shouldLoad)
+        {
+            // 如果玩家靠近了，但血條目前尚未生成
+            if (_enemyHPBar == null)
+            {
+                SpawnHPBar();
+            }
+        }
+        else
+        {
+            // 如果玩家遠離了，或者怪物死亡了，但血條卻存在
+            if (_enemyHPBar != null)
+            {
+                DestroyHPBar();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 動態將血條生成到場景中央 Canvas 下
+    /// </summary>
+    private void SpawnHPBar()
+    {
+        if (_hpBarPrefab == null) return;
+
+        // 1. 尋找中央 Canvas
+        GameObject canvasObj = GameObject.Find("ItemUICanvas");
+        Transform parentCanvas = null;
+
+        if (canvasObj != null)
+        {
+            parentCanvas = canvasObj.transform;
+        }
+        else
+        {
+            // 備用防呆：自動抓取場景中任何一個 Canvas
+            Canvas activeCanvas = FindFirstObjectByType<Canvas>();
+            if (activeCanvas != null) parentCanvas = activeCanvas.transform;
+        }
+
+        // 2. 實例化生成
+        GameObject go = Instantiate(_hpBarPrefab);
+        _enemyHPBar = go.GetComponent<EnemyHPBar>();
+
+        if (_enemyHPBar != null)
+        {
+            // 3. 強制關聯父物件到 Canvas
+            if (parentCanvas != null)
+            {
+                go.transform.SetParent(parentCanvas, false);
+            }
+
+            // 4. 重設本地座標與尺寸
+            RectTransform rt = go.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.localPosition = Vector3.zero;
+                rt.localRotation = Quaternion.identity;
+                rt.localScale = Vector3.one;
+            }
+
+            // 直接將怪物身上設定的偏移量給予生成的血條 UI 實例
+            _enemyHPBar.Offset = _hpBarOffset;
+
+            // 5. 初始化追隨與血量
+            _enemyHPBar.Setup(transform);
+            _enemyHPBar.UpdateHP(CurrentHP, MaxHP); // 確保生成的瞬間就是怪物當前最新的血量
+            _enemyHPBar.SetVisibility(true);        // 生成後直接顯示
+        }
+    }
+
+    /// <summary>
+    /// 動態將血條從 Canvas 下銷毀
+    /// </summary>
+    private void DestroyHPBar()
+    {
+        if (_enemyHPBar != null)
+        {
+            Destroy(_enemyHPBar.gameObject);
+            _enemyHPBar = null; // 清空引用
+        }
+    }
+    #endregion =============================================================
 }
