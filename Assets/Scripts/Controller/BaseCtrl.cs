@@ -413,15 +413,28 @@ public abstract class BaseCtrl : MonoBehaviour
         }
     }
 
-    // 擴充版本：給玩家左右手用
+    // 支援傳入 index 的版本
     public virtual void OnAttack(Transform point, int index)
     {
         if (_skillPrefabs == null || _skillPrefabs.Length == 0) return;
-        // 如果傳入 index，就根據 index 選 Prefab
-        int skillIndex = index < _skillPrefabs.Length ? index : 0;
-        Instantiate(_skillPrefabs[skillIndex], point.position, point.rotation);
-    }
 
+        // 1. 防呆：確保 index 不會超過陣列長度
+        int skillIndex = index < _skillPrefabs.Length ? index : 0;
+
+        // 2. 💡 關鍵修復：位置用發射點 (point.position)，但角度「強制使用角色正前方 (transform.rotation)」
+        Quaternion correctRotation = transform.rotation;
+
+        // 3. 生成對應 Combo 的技能 Prefab
+        GameObject skillObj = Instantiate(_skillPrefabs[skillIndex], point.position, correctRotation);
+
+        // 4. 忽略與自身的物理碰撞
+        Collider myCol = GetComponent<Collider>();
+        Collider skillCol = skillObj.GetComponent<Collider>();
+        if (myCol != null && skillCol != null)
+        {
+            Physics.IgnoreCollision(myCol, skillCol);
+        }
+    }
 
 
     #endregion 動畫控制取用
