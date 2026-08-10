@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UIPlayerSelectCtrl;
 using static UnityEditor.FilePathAttribute;
+using UnityEngine.EventSystems; // 1. 記得引入 EventSystem 命名空間
 
 
 public class UIPlayerSelectCtrl : MonoBehaviour
@@ -81,6 +82,9 @@ public class UIPlayerSelectCtrl : MonoBehaviour
     /// </summary>
     public CharOption[] charOptions;
 
+    [Header("UI 按鈕引用（用於手柄預設聚焦）")]
+    [SerializeField] private Button _enterStageButton; // 拖入「選中進入遊戲」按鈕
+
     /// <summary>
     /// 初始化
     /// </summary>
@@ -101,6 +105,19 @@ public class UIPlayerSelectCtrl : MonoBehaviour
         }
         // 選中預設第一位角色
         UpdateInfo();
+
+        // 在 Start 的最後設定預設選取的按鈕
+        SetDefaultFocus();
+    }
+
+    private void SetDefaultFocus()
+    {
+        if (_enterStageButton != null && EventSystem.current != null)
+        {
+            // 清空目前選取並重新指定，讓 UI 顯示高亮框
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(_enterStageButton.gameObject);
+        }
     }
 
     /// <summary>

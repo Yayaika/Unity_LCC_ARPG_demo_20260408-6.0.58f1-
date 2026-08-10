@@ -1142,6 +1142,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openOnAwake: 0
+  _firstSelectable: {fileID: 0}
+  _previousSelectable: {fileID: 0}
   _nameText: {fileID: 1749540402}
   _hpBarImg: {fileID: 1799526738}
   _hpBufferBarImg: {fileID: 1711626529}
@@ -2080,6 +2082,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openOnAwake: 0
+  _firstSelectable: {fileID: 0}
+  _previousSelectable: {fileID: 0}
   _dashToggle: {fileID: 336520343}
   _godModeToggle: {fileID: 1347351274}
   _volumeSlider: {fileID: 25655677}
@@ -4685,7 +4689,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1731197797
 RectTransform:
   m_ObjectHideFlags: 0
