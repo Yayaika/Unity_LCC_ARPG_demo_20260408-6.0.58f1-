@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement; // 務必引入此命名空間
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public class EnemySpawner : MonoBehaviour
 
     void Spawn()
     {
-        Instantiate(_enemyPrefab, transform.position, transform.rotation);
+       // 1.生成敵人物件並取得 GameObject 實體
+        GameObject spawnedEnemy = Instantiate(_enemyPrefab, transform.position, transform.rotation);
+
+        // 2. 強制將生成的敵人物件搬移到 EnemySpawner 所在的關卡場景中 (例如 Stage01 / Stage02)
+        SceneManager.MoveGameObjectToScene(spawnedEnemy, gameObject.scene);
     }
 }

@@ -82,6 +82,15 @@ public class AnimaCtrl : MonoBehaviour
     /// <param name="name">名稱</param>
     /// <param name="val">值</param>
     public void SetInteger(int hash, int val) => animator.SetInteger(hash, val);
+
+    /// <summary>
+    /// 重置動畫控制器（用於死亡復活後強制恢復初始狀態）
+    /// </summary>
+    public void ResetAnima()
+    {
+        animator.Rebind();
+        animator.Update(0f);
+    }
     #endregion 動畫系統基本方法
 
     #region 動畫觸發事件

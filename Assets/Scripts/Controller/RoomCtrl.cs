@@ -26,6 +26,7 @@ public class RoomCtrl : MonoBehaviour
 
     [SerializeField]
     private GameObject battleZone; // 【新增】戰鬥區域阻擋 (BattleZone)
+
     #endregion 基礎元件
 
     [Header("音效設定")]
@@ -188,6 +189,14 @@ public class RoomCtrl : MonoBehaviour
         // 玩家死亡或離開時，將入口門 (magicDoor) 打開
         if (magicDoor != null) magicDoor.SetActive(false);
         if (cinemachineCamera != null) cinemachineCamera.Priority.Value = 0;
+
+        // 直接將面板 GameObject 關閉，或是由 UIBossInfoCtrl 原本的 Switch(false) 處理
+        UIBossInfoCtrl bossUI = FindFirstObjectByType<UIBossInfoCtrl>();
+        if (bossUI != null)
+        {
+            bossUI.Switch(false); // 隱藏面板
+        }
+
         if (_currentPlayer != null)
         {
             _currentPlayer.OnDied -= OnPlayerDiedInRoom;

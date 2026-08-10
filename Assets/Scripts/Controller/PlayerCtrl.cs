@@ -67,16 +67,28 @@ public class PlayerCtrl : BaseCtrl
     #endregion 復活參數
 
     #region 生命周期
-    // 【新增這整個 Awake 方法】
+    // 【新增標記】記錄玩家是否已經被初始化過，避免切換場景被 base.Awake() 補滿血
+    private static bool _isInitialized = false;
+
     protected override void Awake()
     {
-        // 1. 呼叫父類別的 Awake，確保玩家生成時會執行 _HP = _maxHP (回滿血)
+        // 如果是跨場景搬移過來的舊玩家，不需要再次執行 initialization 補血
+        if (_isInitialized && GameManager.playerCtrl == this)
+        {
+            _initialSpawnPos = transform.position;
+            _initialSpawnRot = transform.rotation;
+            return;
+        }
+
+        // 1. 只有「第一次」生成玩家時才會執行 base.Awake() 滿血初始化
         base.Awake();
+        _isInitialized = true;
 
         // 2. 記錄剛生成時的出生點座標與面向角度
         _initialSpawnPos = transform.position;
         _initialSpawnRot = transform.rotation;
     }
+
     private void OnEnable()
     {
         GameManager.SetCurrentPlayer(this);
@@ -87,18 +99,28 @@ public class PlayerCtrl : BaseCtrl
         InputCtrl.Play.Attack.performed += Attack;
         InputCtrl.Play.Dash.performed += Dash;
 
+        // 【關鍵修復】每次載入新場景後，用目前身上的實際血量手動刷新一次 UI 畫面
+        GameManager.UpdatePlayerHPBar(CurrentHP, MaxHP);
     }
-
 
     private void OnDisable()
     {
-        GameManager.SetCurrentPlayer(null);
         InputCtrl.Play.Disable();
         //操作行爲事件取消訂閲
         InputCtrl.Play.Jump.performed -= Jump;
         InputCtrl.Play.Attack.performed -= Attack;
         InputCtrl.Play.Dash.performed -= Dash;
     }
+
+    private void OnDestroy()
+    {
+        if (GameManager.playerCtrl == this)
+        {
+            GameManager.SetCurrentPlayer(null);
+            _isInitialized = false; // 當玩家物件真的被 Destroy 掉（例如返回主選單）時重置標記
+        }
+    }
+
 
     void Start()
     {
@@ -302,25 +324,31 @@ public class PlayerCtrl : BaseCtrl
         _HP = MaxHP;
         ChangeState(State.Idle);
 
+        // 【關鍵修復】呼叫 AnimaCtrl 的重置方法，強制將動畫重置回 Idle 姿態
+        if (animaCtrl != null)
+        {
+            animaCtrl.ResetAnima();
+        }
+
         // 3. 關閉控制器 -> 瞬移回出生的原點 -> 重新開啟控制器
         charCtrl.enabled = false;
         transform.position = _initialSpawnPos;
         transform.rotation = _initialSpawnRot;
         charCtrl.enabled = true;
-        // 【新增】播放復活音效
-        // 原代碼：if (_audioSource && _respawnSound) _audioSource.PlayOneShot(_respawnSound);
-        // 修改為：
+
+        // 4. 播放復活音效
         if (_respawnSound != null)
         {
             AudioSource.PlayClipAtPoint(_respawnSound, transform.position);
         }
 
-        // 4. 播放復活特效
+        // 5. 播放復活特效
         if (_respawnVFX != null)
         {
             Instantiate(_respawnVFX, transform.position, transform.rotation);
         }
-        // 5. 更新 UI 血條
+
+        // 6. 更新 UI 血條
         GameManager.UpdatePlayerHPBar(CurrentHP, MaxHP);
     }
     public override void TakeDamage(float damage)

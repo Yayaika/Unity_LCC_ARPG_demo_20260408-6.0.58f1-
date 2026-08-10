@@ -64,6 +64,11 @@ public class LoadCoverCtrl : MonoBehaviour
         // 5. 黑幕淡出
         yield return StartCoroutine(Fade(0f));
 
+        if (IsSceneLoaded("LoadCover"))
+        {
+            SceneManager.UnloadSceneAsync("LoadCover");
+        }
+
         // 6. 轉場完畢，銷毀黑幕自身
         Destroy(gameObject);
     }

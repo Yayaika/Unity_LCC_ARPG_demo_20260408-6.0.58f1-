@@ -16,7 +16,6 @@ public class UIBossInfoCtrl : UIPanelCtrl
     [SerializeField]
     private TextMeshProUGUI _hpBarText;
 
-    private bool _isReady;
     private float _HP;
     private float _maxHP;
     private string StrHP => $"{(int)_HP}/{(int)_maxHP}";
@@ -50,16 +49,13 @@ public class UIBossInfoCtrl : UIPanelCtrl
         float targetFill = PercentHP;
         if (maxHP <= 0) targetFill = 0f;
 
-        // 1. 紀錄「更新前」紅色血條的值
         float previousRedFill = _hpBarImg.fillAmount;
+        bool isJustOpened = !IsShow;
 
-        // 2. 更新即時紅色血條
         _hpBarImg.fillAmount = targetFill;
 
-        // 3. 判斷血量變化
-        if (!_isReady || targetFill >= previousRedFill)
+        if (isJustOpened)
         {
-            // --- 情況 A：回血、初始、或無變化 ---
             if (_bufferCoroutine != null)
             {
                 StopCoroutine(_bufferCoroutine);
@@ -67,31 +63,33 @@ public class UIBossInfoCtrl : UIPanelCtrl
             }
             _hpBufferBarImg.fillAmount = targetFill;
         }
-        else
+        else if (targetFill < previousRedFill)
         {
-            // --- 情況 B：扣血 ---
             if (_bufferCoroutine != null)
             {
                 StopCoroutine(_bufferCoroutine);
             }
             _bufferCoroutine = StartCoroutine(DelayBufferBarLerp(targetFill));
         }
-
-        // 【安全鎖第一重】確保黃條絕對不低於紅條
-        _hpBufferBarImg.fillAmount = Mathf.Max(_hpBufferBarImg.fillAmount, _hpBarImg.fillAmount);
-
-        // 第一次執行時初始
-        if (!_isReady && _maxHP > 0)
+        else if (targetFill > previousRedFill)
         {
-            Switch(true);
-            _isReady = true;
+            if (_bufferCoroutine != null)
+            {
+                StopCoroutine(_bufferCoroutine);
+                _bufferCoroutine = null;
+            }
+            _hpBufferBarImg.fillAmount = targetFill;
         }
 
-        // 如果血量歸零，關閉 UI
-        if (_HP <= 0)
+        _hpBufferBarImg.fillAmount = Mathf.Max(_hpBufferBarImg.fillAmount, _hpBarImg.fillAmount);
+
+        if (_HP > 0)
+        {
+            Switch(true);
+        }
+        else
         {
             Switch(false);
-            _isReady = false;
         }
     }
 
@@ -107,7 +105,6 @@ public class UIBossInfoCtrl : UIPanelCtrl
         {
             elapsed += Time.deltaTime;
 
-            // 【安全鎖第二重】確保漸變滑動時，黃條絕對不低於當前紅條
             float currentLerp = Mathf.Lerp(startFill, targetFill, elapsed / duration);
             _hpBufferBarImg.fillAmount = Mathf.Max(currentLerp, _hpBarImg.fillAmount);
 
@@ -116,5 +113,16 @@ public class UIBossInfoCtrl : UIPanelCtrl
 
         _hpBufferBarImg.fillAmount = Mathf.Max(targetFill, _hpBarImg.fillAmount);
         _bufferCoroutine = null;
+    }
+
+    /// <summary>
+    /// 外部呼叫：當玩家離開 Boss 房間且 Boss 未擊敗時主動關閉 UI
+    /// </summary>
+    public void HideBossUI()
+    {
+        if (_HP > 0)
+        {
+            Switch(false);
+        }
     }
 }

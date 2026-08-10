@@ -43,14 +43,14 @@ public class TeleportPoint : MonoBehaviour
     {
         _isPlayerInside = false;
 
-        // 1. 隱藏/淡出提示 UI
+        // 1. 隱藏提示 UI
         if (_activeUIInstance != null)
         {
-            _activeUIInstance.Hide(); //[cite: 2]
-            _activeUIInstance = null; //[cite: 2]
+            _activeUIInstance.Hide();
+            _activeUIInstance = null;
         }
 
-        // 2. 更新玩家位置 (若有 CharacterController，先關閉防物理干擾)
+        // 2. 更新玩家位置
         if (GameManager.playerCtrl != null)
         {
             CharacterController cc = GameManager.playerCtrl.GetComponent<CharacterController>();
@@ -61,50 +61,49 @@ public class TeleportPoint : MonoBehaviour
             if (cc != null) cc.enabled = true;
         }
 
-        // 3. 卸載當前世界關卡場景 (如 Stage01，避免卸載到 GamingUI)
+        // 3. 卸載舊的世界關卡場景 (例如 Stage01)
         string currentSceneName = gameObject.scene.name;
         if (currentSceneName != "GamingUI" && SceneManager.GetSceneByName(currentSceneName).isLoaded)
         {
             SceneManager.UnloadSceneAsync(currentSceneName);
         }
 
-        // 4. 設定 SceneChanger 靜態變數供 LoadCoverCtrl 讀取[cite: 1]
-        SceneChanger.targetSceneName = "GamingUI";
+        // 4. 設定參數：不重複載入 GamingUI，僅讓 LoadCover 疊加載入新關卡
+        SceneChanger.targetSceneName = ""; // 設為空字串，防止 Single 載入清掉 GamingUI 與玩家
         SceneChanger.additiveSceneName = _targetStageName;
 
-        // 5. 以 Additive 模式加載黑屏場景，其 LoadCoverCtrl 會自動接手後續異步加載流程[cite: 1]
+        // 5. 加載 LoadCover 場景 (讓 LoadCoverCtrl 自動卸載自身並載入新 Stage)
         SceneManager.LoadSceneAsync(_loadCoverSceneName, LoadSceneMode.Additive);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (GameManager.playerCtrl != null && other.gameObject == GameManager.playerCtrl.gameObject)
+        if (other.CompareTag("Player") || (GameManager.playerCtrl != null && other.gameObject == GameManager.playerCtrl.gameObject))
         {
             _isPlayerInside = true;
 
-            // 沿用 InteractableItem 的 UI 生成邏輯[cite: 2]
             if (_uiController != null && _activeUIInstance == null)
             {
-                GameObject canvasObj = GameObject.Find("ItemUICanvas"); //[cite: 2]
-                Transform parentCanvas = canvasObj != null ? canvasObj.transform : null; //[cite: 2]
+                GameObject canvasObj = GameObject.Find("ItemUICanvas");
+                Transform parentCanvas = canvasObj != null ? canvasObj.transform : null;
 
-                _activeUIInstance = Instantiate(_uiController, parentCanvas); //[cite: 2]
-                _activeUIInstance.offset = _uiOffset; //[cite: 2]
-                _activeUIInstance.Show(transform); //[cite: 2]
+                _activeUIInstance = Instantiate(_uiController, parentCanvas);
+                _activeUIInstance.offset = _uiOffset;
+                _activeUIInstance.Show(transform);
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (GameManager.playerCtrl != null && other.gameObject == GameManager.playerCtrl.gameObject)
+        if (other.CompareTag("Player") || (GameManager.playerCtrl != null && other.gameObject == GameManager.playerCtrl.gameObject))
         {
             _isPlayerInside = false;
 
             if (_activeUIInstance != null)
             {
-                _activeUIInstance.Hide(); //[cite: 2]
-                _activeUIInstance = null; //[cite: 2]
+                _activeUIInstance.Hide();
+                _activeUIInstance = null;
             }
         }
     }
